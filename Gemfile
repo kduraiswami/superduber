@@ -14,6 +14,8 @@ gem 'twilio-ruby', '~> 3.12'
 
 gem 'bower-rails'
 
+gem 'httparty'
+
 group :development, :test do
   gem 'byebug'
   gem 'hirb'
