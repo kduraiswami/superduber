@@ -5,10 +5,14 @@ gem 'rails', '4.2.1'
 
 gem 'rails-api'
 
+gem 'jquery-rails'
+
 gem 'mongoid', '~> 4.0.0'
 gem 'bson_ext'
 
 gem 'twilio-ruby', '~> 3.12'
+
+gem 'bower-rails'
 
 group :development, :test do
   gem 'byebug'
