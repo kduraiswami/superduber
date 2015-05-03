@@ -1,0 +1,9 @@
+.DS_Store
+.env
+/tmp
+/public/uploads
+/coverage
+/log/*.log
+
+# Ignore bundler config.
+/.bundle
