@@ -7,6 +7,9 @@ class User
   # field :validated, type: Mongoid::Boolean
   field :uber_access_token, type: String
   field :uber_refresh_token, type: String
+  field :picture, type: String
+  field :uuid, type: String
 
   embeds_many :events
+
 end

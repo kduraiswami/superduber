@@ -23,9 +23,24 @@ class Oauth2Controller < ApplicationController
         headers: {"Authorization" => "Bearer #{access_token}", "scope" => "profile" }
         )
 
-      render json: user_info.inspect
+      params[:user] = user_info
+      user = User.find_or_create_by(uuid: user_info["uuid"])
+      user.update!(user_params)
+      user.uber_access_token = access_token
+      user.uber_refresh_token = refresh_token
+      user.save!
+      session[:uuid] = user_info["uuid"]
+
+      byebug
+      render json: user.inspect
     end
 
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:first_name, :last_name, :email, :uber_token, :phone, :uuid, :picture)
   end
 
 end
