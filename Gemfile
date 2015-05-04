@@ -37,6 +37,8 @@ gem 'bower-rails'
 gem 'mongoid', '~> 4.0.0'
 gem 'bson_ext'
 gem 'twilio-ruby', '~> 3.12'
+gem 'resque'
+gem 'resque-scheduler'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

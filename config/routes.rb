@@ -1,3 +1,6 @@
+require 'resque/server'
+require 'resque/scheduler/server'
+
 Rails.application.routes.draw do
   resources :users do
     resources :events
@@ -10,6 +13,8 @@ Rails.application.routes.draw do
   get 'ubertest' => 'events#ubertest'
 
   root 'users#index'
+
+  mount Resque::Server.new, at: "/resque"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
