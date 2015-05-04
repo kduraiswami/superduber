@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     resources :events
   end
 
+  get 'logout' => 'users#reset_session'
   get 'oauth2' => 'oauth2#index'
   get 'oauth2/callback' => 'oauth2#callback'
 

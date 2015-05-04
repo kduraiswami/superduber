@@ -1,10 +1,11 @@
 class UsersController < ApplicationController
 
   def index
+    p "CURRENT USER:"
+    p current_user
+    p "SESSION UUID:"
+    p session[:uuid]
     render json: User.all
-  end
-
-  def create
   end
 
   def show
@@ -13,10 +14,10 @@ class UsersController < ApplicationController
   def edit
   end
 
-  private
-
-  def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :uber_token, :phone)
+  def reset_session
+    session.clear
+    p "CLEARED SESSION!"
+    redirect_to root_path
   end
 
 end
