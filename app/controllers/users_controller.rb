@@ -1,10 +1,6 @@
 class UsersController < ApplicationController
 
   def index
-    p "CURRENT USER:"
-    p current_user
-    p "SESSION UUID:"
-    p session[:uuid]
     render json: User.all
   end
 
