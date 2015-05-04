@@ -7,7 +7,13 @@ Rails.application.routes.draw do
   get 'oauth2' => 'oauth2#index'
   get 'oauth2/callback' => 'oauth2#callback'
 
-  root 'users#index'
+  get '/' => "home#index"
+
+  root 'home#index'
+
+  namespace :api do
+    resources :events, defaults: { format: :json }
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
