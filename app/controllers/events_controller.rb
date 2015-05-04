@@ -1,11 +1,12 @@
 class EventsController < ApplicationController
 
-  def ubertest
-    event = current_user.events.first
+def index
+    render json: User.first.events
+end
 
-
-
-    render json: event
-  end
+def ubertest
+  event = current_user.events.first
+  render json: event
+end
 
 end

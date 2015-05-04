@@ -1,0 +1,31 @@
+  <body ng-controller="HomeController">
+  <p> Events:</p>
+  <ul ng-repeat="event in events">
+    <li>
+      <p>{{ event.name }}</p>
+      <p>{{ event.depart_address }}</p>
+      <p>{{ event.arrival_address }}</p>
+    </li>
+  </ul>
+
+  <form action = "/events/create" method="post">
+    <label> Name </label><input type = "text" name = "event[name]" placeholder = "Event Name">
+
+    <label> Depart Address </label><input type = "text" name = "event[name]" placeholder = "Departure Address">
+
+    <label> Arrive Address </label><input type = "text" name = "event[name]" placeholder = "Arrival Address">
+
+    <label> Date </label><input type = "datetime-local" name = "event[date]">
+    <br>
+    <form action="">
+    <input type="radio" name="ride_type" value="uberPOOL">uberPOOL
+    <input type="radio" name="ride_type" value="uberX">uberX
+    <input type="radio" name="ride_type" value="blackcar">Black Car
+    <input type="radio" name="ride_type" value="UberXL">UberXL
+    </form>
+
+    <input type="submit">
+  </form>
+  </body>
+
+
