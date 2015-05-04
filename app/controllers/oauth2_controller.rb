@@ -31,7 +31,6 @@ class Oauth2Controller < ApplicationController
       user.save!
       session[:uuid] = user_info["uuid"]
 
-      byebug
       render json: user.inspect
     end
 

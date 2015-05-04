@@ -5,7 +5,6 @@ class UsersController < ApplicationController
     p current_user
     p "SESSION UUID:"
     p session[:uuid]
-    byebug
     render json: User.all
   end
 
@@ -13,6 +12,12 @@ class UsersController < ApplicationController
   end
 
   def edit
+  end
+
+  def reset_session
+    session.clear
+    p "CLEARED SESSION!"
+    redirect_to root_path
   end
 
 end
