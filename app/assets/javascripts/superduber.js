@@ -1,42 +1,38 @@
-// public/core.js
-var scotchTodo = angular.module('scotchTodo', []);
 
-function mainController($scope, $http) {
-    $scope.formData = {};
+var superduber = angular.module('superduber', ['ngRoute']);
 
-    // when landing on the page, get all todos and show them
-    $http.get('/api/todos')
-        .success(function(data) {
-            $scope.todos = data;
-            console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
 
-    // when submitting the add form, send the text to the node API
-    $scope.createTodo = function() {
-        $http.post('/api/todos', $scope.formData)
-            .success(function(data) {
-                $scope.formData = {}; // clear the form so our user is ready to enter another
-                $scope.todos = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
 
-    // delete a todo after checking it
-    $scope.deleteTodo = function(id) {
-        $http.delete('/api/todos/' + id)
-            .success(function(data) {
-                $scope.todos = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
-    };
+superduber.config(function ($routeProvider) {
+  $routeProvider
+    .when('/', {
+      controller: 'HomeController',
+      templateUrl: 'events.html'
+    })
+    .otherwise({
+      redirectTo: '/'
+    });
+});
 
-}
+
+superduber.controller('HomeController', ['$scope', 'events', function($scope, events) {
+    events.success(function(data){
+        $scope.events = data.events;
+    })
+
+}]);
+
+
+
+superduber.factory('events', ['$http', function($http) {
+  return $http.get('/user_events')
+         .success(function(data) {
+           return data;
+         })
+         .error(function(data) {
+           return data;
+         });
+}]);
+
+
+
