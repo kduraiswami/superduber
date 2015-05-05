@@ -6,7 +6,7 @@ class EventsController < ApplicationController
 
   def ubertest
     event = current_user.events.first
-    update_estimate!(event)
+    event.update_estimate!
     render json: event
   end
 

@@ -1,4 +1,5 @@
 class Event
+  include UberRequestsConcern
   include Mongoid::Document
   field :name, type: String
   field :depart_address, type: String
@@ -7,7 +8,7 @@ class Event
   field :arrival_address, type: String
   field :arrival_lon, type: String
   field :arrival_lat, type: String
-  field :arrival_datetime, type: Time
+  field :arrival_datetime, type: Time #UTC OR LOCAL TIME?
   field :ride_id, type: String
   field :ride_name, type: String
   field :duration_estimate, type: Integer
@@ -15,36 +16,25 @@ class Event
 
   embedded_in :user, inverse_of: :events
 
+  def time_as_str
+    self.arrival_datetime.strftime("%l:%M%P")
+  end
+
   def estimated_duration
     self.duration_estimate + self.pickup_estimate
   end
 
-  def estimated_duration_minutes
-    (estimated_duration / 60.0).ceil
-  end
-
   def update_estimate!
     puts "RIDE ESTIMATE RESPONSE:"
-    p response = HTTParty.post("https://api.uber.com/v1/requests/estimate",
-      # headers: {"Authorization" => "Bearer #{current_user.uber_access_token}",
-      headers: {"Authorization" => "Bearer yhidsWd75ORVelqceWMGDvVqkrp8qC",
-      "scope" => "request",
-      "Content-Type" => "application/json",
-      },
-      body: {
-        product_id: self.ride_id,
-        start_latitude: self.depart_lat,
-        start_longitude: self.depart_lon,
-        end_latitude: self.arrival_lat,
-        end_longitude: self.arrival_lon
-      }.to_json
-    )
+    p response = request_estimate_response(self)
 
-    self.pickup_estimate = response['pickup_estimate']*60
-    self.duration_estimate = response['trip']['duration_estimate']
+    self.pickup_estimate = response['pickup_estimate']
+    self.duration_estimate = (response['trip']['duration_estimate']/60.0).ceil
     self.save!
 
-    puts "ESTIMATED DURATION: #{estimated_duration_minutes} (minutes)"
+    puts "ESTIMATED DURATION: #{estimated_duration} (minutes)"
+
+    response
   end
 
   def notification_buffer
@@ -52,7 +42,7 @@ class Event
   end
 
   def time_to_notify_user
-    self.arrival_datetime - estimated_duration_minutes - notification_buffer
+    self.arrival_datetime - estimated_duration - notification_buffer
   end
 
   def schedule_bg_job
@@ -85,6 +75,42 @@ class Event
     else
       return time_to_notify_user - ((time_to_notify_user - Time.now) / 2)
     end
+  end
+
+  def request_ride
+    HTTParty.post("https://sandbox-api.uber.com/v1/requests",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+      "scope" => "request",
+      "Content-Type" => "application/json",
+      },
+      body: {
+        product_id: self.ride_id,
+        start_latitude: self.depart_lat,
+        start_longitude: self.depart_lon,
+        # start_latitude: "37.7863918",
+        # start_longitude: "-122.4535854",
+        end_latitude: self.arrival_lat,
+        end_longitude: self.arrival_lon
+      }.to_json
+    )
+  end
+
+  ### TWILIO NOTIFICATION ###
+  def send_twilio_notification
+    response = update_estimate!
+    cost_range = response['price']['display']
+    surge_multiplier = response['price']['surge_multiplier']
+    surge_confirmation_id = response['price']['surge_confirmation_id']
+    surge_confirmation_href = response['price']['surge_confirmation_href']
+
+    client = Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
+    message = client.messages.create(
+      :from => '+19255237514',
+      :to => '+15182813326',
+      :body => "Upcoming event '#{self.name}' at#{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Reply '#{surge_multiplier}' to request ride now.",
+      # :media_url => 'http://linode.rabasa.com/yoda.gif'
+      # status_callback: request.base_url + '/twilio/status'
+      )
   end
 
 end
