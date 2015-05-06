@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   # root 'home#index'
   get 'ubertest' => 'events#ubertest'
 
-  post '/users/request_uber' => 'users#request_uber'
+  post '/users/cancel_ride' => 'users#cancel_ride'
   post '/users/uber_status_update' => 'users#uber_status_update'
 
   root 'users#index'

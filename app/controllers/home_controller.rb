@@ -16,6 +16,3 @@ class HomeController < ApplicationController
 
   end
 end
-
-
-next step: uber webhook setup?

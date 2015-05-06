@@ -113,7 +113,27 @@ class Event
       }.to_json
     )
 
-    puts response
+    response.code
+  end
+
+  def check_ride_status
+    HTTParty.get("https://sandbox-api.uber.com/v1/requests/#{self.ride_request_id}",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+        "scope" => "request",
+        "Content-Type" => "application/json",
+      }
+    )
+  end
+
+  def cancel_ride # remember to test this method
+    response = HTTParty.delete("https://sandbox-api.uber.com/v1/requests/#{self.ride_request_id}",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+        "scope" => "request",
+        "Content-Type" => "application/json",
+      }
+    )
+
+    response.code
   end
 
   ### TWILIO NOTIFICATION ###
@@ -138,13 +158,3 @@ class Event
 
 
 end
-
-    # HTTParty.put("https://api.uber.com/v1/sandbox/requests/f61977d2-fa16-4587-9d24-a088df96a22f",
-    #   headers: {"Authorization" => "Bearer #{e.user.uber_access_token}",
-    #     "scope" => "request",
-    #     "Content-Type" => "application/json",
-    #   },
-    #   body: {
-    #       status: 'accepted' #either use 'accepted' or 'no_drivers_available'
-    #   }.to_json
-    # )
