@@ -39,10 +39,12 @@ class UsersController < ApplicationController
     render json: {}
   end
 
-  def uber_status_update
+  def uber_status_update # Webhook triggered by change in status of a ride request
     puts "*************************"
     puts "Status update from Uber:"
     puts params.inspect
+
+
   end
 
 

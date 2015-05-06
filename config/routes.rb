@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get 'oauth2' => 'oauth2#index'
   get 'oauth2/callback' => 'oauth2#callback'
   get '/' => "home#index"
+  get '/request_uber' => "home#request_uber"
 
   # root 'home#index'
   get 'ubertest' => 'events#ubertest'

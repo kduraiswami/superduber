@@ -21,12 +21,3 @@ module UberRequestsConcern
 
 end
 
-
-# HTTParty.put("https://sandbox-api.uber.com/v1/sandbox/requests/a8d4b278-adaf-47b8-87ab-958c6e429580",
-#       headers: {"Authorization" => "Bearer #{e.user.uber_access_token}",
-#       "scope" => "request",
-#       "Content-Type" => "application/json",
-#       },
-#       body: {
-#         status: 'accepted'
-#       }.to_json)

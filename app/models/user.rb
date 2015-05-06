@@ -10,6 +10,6 @@ class User
   field :picture, type: String
   field :uuid, type: String
 
-  embeds_many :events
+  has_many :events
 
 end

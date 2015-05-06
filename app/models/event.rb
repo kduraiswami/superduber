@@ -9,12 +9,14 @@ class Event
   field :arrival_lon, type: String
   field :arrival_lat, type: String
   field :arrival_datetime, type: Time #UTC OR LOCAL TIME?
-  field :ride_id, type: String
-  field :ride_name, type: String
+  field :ride_id, type: String # Product code
+  field :ride_name, type: String #e.g. UberX
+  field :ride_request_id, type: String #ID for the request
+  field :surge_confirmation_id, type: String
   field :duration_estimate, type: Integer
   field :pickup_estimate, type: Integer
 
-  embedded_in :user, inverse_of: :events
+  belongs_to :user
 
   def time_as_str
     self.arrival_datetime.strftime("%l:%M%P")
@@ -78,7 +80,7 @@ class Event
   end
 
   def request_ride
-    HTTParty.post("https://sandbox-api.uber.com/v1/requests",
+    response = HTTParty.post("https://sandbox-api.uber.com/v1/requests",
       headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
       "scope" => "request",
       "Content-Type" => "application/json",
@@ -93,24 +95,56 @@ class Event
         end_longitude: self.arrival_lon
       }.to_json
     )
+
+    self.ride_request_id = response["request_id"]
+    self.save!
+
+    response
+  end
+
+  def change_ride_status(status) #For sandbox / testing only
+    response = HTTParty.put("https://sandbox-api.uber.com/v1/sandbox/requests/#{self.ride_request_id}",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+        "scope" => "request",
+        "Content-Type" => "application/json",
+      },
+      body: {
+          status: status #either use 'accepted' or 'no_drivers_available'
+      }.to_json
+    )
+
+    puts response
   end
 
   ### TWILIO NOTIFICATION ###
-  def send_twilio_notification
+  def send_twilio_notification #Initial notification asking user if they want to request a ride
     response = update_estimate!
     cost_range = response['price']['display']
     surge_multiplier = response['price']['surge_multiplier']
-    surge_confirmation_id = response['price']['surge_confirmation_id']
+    self.surge_confirmation_id = response['price']['surge_confirmation_id']
     surge_confirmation_href = response['price']['surge_confirmation_href']
+
+    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://1cac61d0.ngrok.com" : root_url}/request_uber")
 
     client = Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
     message = client.messages.create(
       :from => '+19255237514',
       :to => '+15182813326',
-      :body => "Upcoming event '#{self.name}' at#{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Reply '#{surge_multiplier}' to request ride now.",
+      :body => "Upcoming event '#{self.name}' at#{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}",
       # :media_url => 'http://linode.rabasa.com/yoda.gif'
       # status_callback: request.base_url + '/twilio/status'
       )
   end
 
+
 end
+
+    # HTTParty.put("https://api.uber.com/v1/sandbox/requests/f61977d2-fa16-4587-9d24-a088df96a22f",
+    #   headers: {"Authorization" => "Bearer #{e.user.uber_access_token}",
+    #     "scope" => "request",
+    #     "Content-Type" => "application/json",
+    #   },
+    #   body: {
+    #       status: 'accepted' #either use 'accepted' or 'no_drivers_available'
+    #   }.to_json
+    # )
