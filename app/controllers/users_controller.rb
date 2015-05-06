@@ -23,27 +23,6 @@ class UsersController < ApplicationController
   # after_filter :set_header
   skip_before_action :verify_authenticity_token
 
-  def cancel_ride # Webhook triggered by user SMS to Twilio
-
-    #Find the event based on phone number
-    #event.cancel_ride to trigger delete request
-    #Send success message to user if receive status 204 from Uber
-
-    puts "*************************"
-    puts "SMS response from user:"
-    puts params.inspect
-    user_response = params[:Body]
-    # user = User.find_by(phone: params[:From])
-    # event = user.next_event # write this method
-    # if user_response == "666"
-      #request ride
-    # else
-      #return sms saying price has changed
-    # end
-
-    render json: {}
-  end
-
   def uber_status_update # Webhook triggered by change in status of a ride request
     puts "*************************"
     puts "Status update from Uber:"
@@ -54,6 +33,24 @@ class UsersController < ApplicationController
     #Find event based on info in webhook response
     #Send twilio notification (case statement based on the status received from Uber)
 
+  end
+
+  def cancel_ride # Webhook triggered by user SMS to Twilio
+
+    #Find the event based on phone number
+    #event.cancel_ride to trigger delete request
+    #Send success message to user if receive status 204 from Uber
+
+    user_response = params[:Body]
+    user = User.find_by(phone: params[:From])
+    event = user.next_event
+    # if user_response == "666"
+      #request ride
+    # else
+      #return sms saying price has changed
+    # end
+
+    render json: {}
   end
 
 

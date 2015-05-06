@@ -136,8 +136,19 @@ class Event
     response.code
   end
 
-  ### TWILIO NOTIFICATION ###
-  def send_twilio_notification #Initial notification asking user if they want to request a ride
+  ### TWILIO HELPER METHODS ###
+  def send_twilio_message(message) #Send message to user via SMS
+    client = Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
+    message = client.messages.create(
+      :from => '+19255237514',
+      :to => self.user.phone,
+      :body => message,
+      # :media_url => 'http://linode.rabasa.com/yoda.gif'
+      # status_callback: request.base_url + '/twilio/status'
+      )
+  end
+
+  def twilio_upcoming_event_notification #Initial notification asking user if they want to request a ride
     response = update_estimate!
     cost_range = response['price']['display']
     surge_multiplier = response['price']['surge_multiplier']
@@ -146,15 +157,15 @@ class Event
 
     url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://1cac61d0.ngrok.com" : root_url}/request_uber")
 
-    client = Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
-    message = client.messages.create(
-      :from => '+19255237514',
-      :to => '+15182813326',
-      :body => "Upcoming event '#{self.name}' at#{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}",
-      # :media_url => 'http://linode.rabasa.com/yoda.gif'
-      # status_callback: request.base_url + '/twilio/status'
-      )
+    message = "Upcoming event '#{self.name}' at#{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}"
+
+    send_twilio_message(message)
   end
 
 
 end
+
+# twilio_upcoming_event_notification
+# twilio_ride_accepted_notification
+# twilio_driver_arriving_notification
+# twilio_driver_cancelled_notification

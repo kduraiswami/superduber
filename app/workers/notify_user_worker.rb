@@ -3,7 +3,7 @@ class NotifyUserWorker
 
   def self.perform(event)
     #Check uber time
-    event.send_twilio_notification
+    event.twilio_upcoming_event_notification
 
     #Send twilio notification
 
