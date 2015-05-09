@@ -23,7 +23,7 @@ class Oauth2Controller < ApplicationController
         headers: {"Authorization" => "Bearer #{access_token}", "scope" => "profile" }
         )
 
-      params[:user] = user_info
+      params[:user] = user_info #what is this for?
       user = User.find_or_create_by(uuid: user_info["uuid"])
       user.update!(user_params)
       user.uber_access_token = access_token
