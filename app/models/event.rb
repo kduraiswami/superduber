@@ -79,6 +79,26 @@ class Event
     end
   end
 
+  def update_ride_id!
+    response = HTTParty.get("https://api.uber.com/v1/products",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+      "scope" => "request",
+      "Content-Type" => "application/json",
+      },
+      query: {
+        latitude: self.depart_lat,
+        longitude: self.depart_lon,
+      }
+    )
+    
+    response["products"].each do |product|
+      return self.ride_id = product["product_id"] if self.ride_name == product["display_name"]
+    end
+
+    nil
+
+  end
+
   def request_ride
     response = HTTParty.post("https://sandbox-api.uber.com/v1/requests",
       headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
