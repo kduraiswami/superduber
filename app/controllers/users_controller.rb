@@ -57,9 +57,12 @@ class UsersController < ApplicationController
 
   def cancel_ride # Webhook triggered by user SMS to Twilio
     user_response = params[:Body]
-    p user = User.find_by(phone: params[:From])
-    p event = user.next_event
-    event.cancel_ride
+    user = User.find_by(phone: params[:From])
+
+    if user_response == '666' #decide on what this should be
+      p event = user.next_event
+      event.cancel_ride
+    end
 
     render json: { message: "success" }
   end
