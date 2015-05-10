@@ -232,6 +232,6 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   spring
   sqlite3
-  twilio-ruby (~> 3.12)
+  twilio-ruby
   uglifier (>= 1.3.0)
   web-console (~> 2.0)

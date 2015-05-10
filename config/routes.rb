@@ -6,15 +6,17 @@ Rails.application.routes.draw do
     resources :events
   end
 
-
-
   get 'logout' => 'users#reset_session'
   get 'oauth2' => 'oauth2#index'
   get 'oauth2/callback' => 'oauth2#callback'
   get '/' => "home#index"
+  get '/request_uber' => "home#request_uber"
 
   # root 'home#index'
   get 'ubertest' => 'events#ubertest'
+
+  post '/users/cancel_ride' => 'users#cancel_ride'
+  post '/users/uber_status_update' => 'users#uber_status_update'
 
   root 'users#index'
 

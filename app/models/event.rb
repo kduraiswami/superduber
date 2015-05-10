@@ -1,4 +1,5 @@
 class Event
+  include UberRequestsConcern
   include Mongoid::Document
   field :name, type: String
   field :depart_address, type: String
@@ -7,44 +8,37 @@ class Event
   field :arrival_address, type: String
   field :arrival_lon, type: String
   field :arrival_lat, type: String
-  field :arrival_datetime, type: Time
-  field :ride_id, type: String
-  field :ride_name, type: String
+  field :arrival_datetime, type: Time #UTC OR LOCAL TIME?
+  field :ride_id, type: String # Product code
+  field :ride_name, type: String #e.g. UberX
+  field :ride_request_id, type: String #ID for the request
+  field :surge_confirmation_id, type: String
   field :duration_estimate, type: Integer
   field :pickup_estimate, type: Integer
 
-  embedded_in :user, inverse_of: :events
+  belongs_to :user
+
+  ################ SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER ####################
+
+  def time_as_str
+    self.arrival_datetime.strftime("%l:%M%P")
+  end
 
   def estimated_duration
     self.duration_estimate + self.pickup_estimate
   end
 
-  def estimated_duration_minutes
-    (estimated_duration / 60.0).ceil
-  end
-
   def update_estimate!
     puts "RIDE ESTIMATE RESPONSE:"
-    p response = HTTParty.post("https://api.uber.com/v1/requests/estimate",
-      # headers: {"Authorization" => "Bearer #{current_user.uber_access_token}",
-      headers: {"Authorization" => "Bearer yhidsWd75ORVelqceWMGDvVqkrp8qC",
-      "scope" => "request",
-      "Content-Type" => "application/json",
-      },
-      body: {
-        product_id: self.ride_id,
-        start_latitude: self.depart_lat,
-        start_longitude: self.depart_lon,
-        end_latitude: self.arrival_lat,
-        end_longitude: self.arrival_lon
-      }.to_json
-    )
+    p response = request_estimate_response(self)
 
-    self.pickup_estimate = response['pickup_estimate']*60
-    self.duration_estimate = response['trip']['duration_estimate']
+    self.pickup_estimate = response['pickup_estimate']
+    self.duration_estimate = (response['trip']['duration_estimate']/60.0).ceil
     self.save!
 
-    puts "ESTIMATED DURATION: #{estimated_duration_minutes} (minutes)"
+    puts "ESTIMATED DURATION: #{estimated_duration} (minutes)"
+
+    response
   end
 
   def notification_buffer
@@ -52,21 +46,21 @@ class Event
   end
 
   def time_to_notify_user
-    self.arrival_datetime - estimated_duration_minutes - notification_buffer
+    self.arrival_datetime - estimated_duration - notification_buffer
   end
 
   def schedule_bg_job
     update_estimate!
-    time = time_of_next_bg_job
+    time_of_next_bg_job
 
-    if time_to_notify_user < time
+    if time_to_notify_user < time_of_next_bg_job
       Resque.enqueue(NotifyUserWorker, self)
       puts "time to notify user is < time of next bg job; run NotifyUserWorker"
-    elsif time_to_notify_user - time < notification_buffer
+    elsif time_to_notify_user - time_of_next_bg_job < notification_buffer
       Resque.enqueue_at(time_to_notify_user, NotifyUserWorker, self)
       puts "time to notify user minus time of next bg job is < 10min; schedule NotifyUserWorker"
     else
-      Resque.enqueue_at(time, RequestEstimateWorker, self)
+      Resque.enqueue_at(time_of_next_bg_job, RequestEstimateWorker, self)
       puts "time to notify user is > 10min so schedule another RequestEstimateWorker"
     end
 
@@ -74,7 +68,7 @@ class Event
     puts "Scheduled background job:"
     puts "Time of event: #{self.arrival_datetime}"
     puts "Time to notify user: #{time_to_notify_user}"
-    puts "Time of next background job: #{time}"
+    puts "Time of next background job: #{time_of_next_bg_job}"
     puts "Current time: #{Time.current}"
     puts "************************************"
   end
@@ -87,4 +81,97 @@ class Event
     end
   end
 
+  ########### REQUESTING, CHECKING, UPDATING, CANCELLING RIDES ############
+
+  def request_ride
+    response = HTTParty.post("https://sandbox-api.uber.com/v1/requests",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+      "scope" => "request",
+      "Content-Type" => "application/json",
+      },
+      body: {
+        product_id: self.ride_id,
+        start_latitude: self.depart_lat,
+        start_longitude: self.depart_lon,
+        # start_latitude: "37.7863918",
+        # start_longitude: "-122.4535854",
+        end_latitude: self.arrival_lat,
+        end_longitude: self.arrival_lon
+      }.to_json
+    )
+
+    self.ride_request_id = response["request_id"]
+    self.save!
+
+    # add a twilio sms response to user saying the ride has been requested, that we will update them when it's accepted, and that they can cancel at any time by replying 'Abort'
+    response #just for debugging
+  end
+
+  def change_ride_status(status) #For sandbox / testing only
+    response = HTTParty.put("https://sandbox-api.uber.com/v1/sandbox/requests/#{self.ride_request_id}",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+        "scope" => "request",
+        "Content-Type" => "application/json",
+      },
+      body: {
+          status: status #either use 'accepted' or 'no_drivers_available'
+      }.to_json
+    )
+
+    response.code
+  end
+
+  def check_ride_status
+    HTTParty.get("https://sandbox-api.uber.com/v1/requests/#{self.ride_request_id}",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+        "scope" => "request",
+        "Content-Type" => "application/json",
+      }
+    )
+  end
+
+  def cancel_ride # remember to test this method
+    response = HTTParty.delete("https://sandbox-api.uber.com/v1/requests/#{self.ride_request_id}",
+      headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
+        "scope" => "request",
+        "Content-Type" => "application/json",
+      }
+    )
+
+    response.code
+  end
+
+  ### TWILIO HELPER METHODS ###
+  def send_twilio_message(message) #Send message to user via SMS
+    client = Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
+    message = client.messages.create(
+      :from => '+19255237514',
+      :to => self.user.phone,
+      :body => message,
+      # :media_url => 'http://linode.rabasa.com/yoda.gif'
+      # status_callback: request.base_url + '/twilio/status'
+      )
+  end
+
+  def twilio_upcoming_event_notification #Initial notification asking user if they want to request a ride
+    response = update_estimate!
+    cost_range = response['price']['display']
+    surge_multiplier = response['price']['surge_multiplier']
+    surge_multiplier = 'none' if surge_multiplier == 1.0
+    self.surge_confirmation_id = response['price']['surge_confirmation_id']
+    surge_confirmation_href = response['price']['surge_confirmation_href']
+
+    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://6e99e3af.ngrok.com" : root_url}/request_uber/?event_id=#{self.id.to_s}")
+
+    message = "Upcoming event '#{self.name}' at #{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}"
+
+    send_twilio_message(message)
+  end
+
+
 end
+
+# twilio_upcoming_event_notification
+# twilio_ride_accepted_notification
+# twilio_driver_arriving_notification
+# twilio_driver_cancelled_notification
