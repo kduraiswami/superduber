@@ -44,7 +44,7 @@ class UsersController < ApplicationController
 
       p message = "#{name} will be arriving in #{eta} mins in a #{make} #{model} (Plate# #{plate})."
       event.send_twilio_message(message)
-    when "no_drivers_available" #need to test
+    when "no_drivers_available" #need to testubu
       p message = "No drivers are available"
       event.send_twilio_message(message)
     when "rider_canceled"
