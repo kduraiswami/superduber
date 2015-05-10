@@ -18,6 +18,8 @@ class Event
 
   belongs_to :user
 
+  ################ SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER ####################
+
   def time_as_str
     self.arrival_datetime.strftime("%l:%M%P")
   end
@@ -49,16 +51,16 @@ class Event
 
   def schedule_bg_job
     update_estimate!
-    time = time_of_next_bg_job
+    time_of_next_bg_job
 
-    if time_to_notify_user < time
+    if time_to_notify_user < time_of_next_bg_job
       Resque.enqueue(NotifyUserWorker, self)
       puts "time to notify user is < time of next bg job; run NotifyUserWorker"
-    elsif time_to_notify_user - time < notification_buffer
+    elsif time_to_notify_user - time_of_next_bg_job < notification_buffer
       Resque.enqueue_at(time_to_notify_user, NotifyUserWorker, self)
       puts "time to notify user minus time of next bg job is < 10min; schedule NotifyUserWorker"
     else
-      Resque.enqueue_at(time, RequestEstimateWorker, self)
+      Resque.enqueue_at(time_of_next_bg_job, RequestEstimateWorker, self)
       puts "time to notify user is > 10min so schedule another RequestEstimateWorker"
     end
 
@@ -66,7 +68,7 @@ class Event
     puts "Scheduled background job:"
     puts "Time of event: #{self.arrival_datetime}"
     puts "Time to notify user: #{time_to_notify_user}"
-    puts "Time of next background job: #{time}"
+    puts "Time of next background job: #{time_of_next_bg_job}"
     puts "Current time: #{Time.current}"
     puts "************************************"
   end
@@ -99,6 +101,7 @@ class Event
 
   end
 
+  ########### REQUESTING, CHECKING, UPDATING, CANCELLING RIDES ############
   def request_ride
     response = HTTParty.post("https://sandbox-api.uber.com/v1/requests",
       headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
@@ -119,7 +122,8 @@ class Event
     self.ride_request_id = response["request_id"]
     self.save!
 
-    response
+    # add a twilio sms response to user saying the ride has been requested, that we will update them when it's accepted, and that they can cancel at any time by replying 'Abort'
+    response #just for debugging
   end
 
   def change_ride_status(status) #For sandbox / testing only
@@ -172,12 +176,13 @@ class Event
     response = update_estimate!
     cost_range = response['price']['display']
     surge_multiplier = response['price']['surge_multiplier']
+    surge_multiplier = 'none' if surge_multiplier == 1.0
     self.surge_confirmation_id = response['price']['surge_confirmation_id']
     surge_confirmation_href = response['price']['surge_confirmation_href']
 
-    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://1cac61d0.ngrok.com" : root_url}/request_uber")
+    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://6e99e3af.ngrok.com" : root_url}/request_uber/?event_id=#{self.id.to_s}")
 
-    message = "Upcoming event '#{self.name}' at#{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}"
+    message = "Upcoming event '#{self.name}' at #{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}"
 
     send_twilio_message(message)
   end

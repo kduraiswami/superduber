@@ -1,6 +1,4 @@
-
 var superduber = angular.module('superduber', ['ngRoute']);
-
 
 
 superduber.config(function ($routeProvider) {
@@ -17,11 +15,12 @@ superduber.config(function ($routeProvider) {
 
 superduber.controller('HomeController', ['$scope', 'events', function($scope, events) {
     events.success(function(data){
-        $scope.events = data.events;
+      $scope.user = data.user;
+      $scope.events = data.events;
+      console.log("USER UUID");
+      console.log(data.user.uuid);
     })
-
 }]);
-
 
 
 superduber.factory('events', ['$http', function($http) {

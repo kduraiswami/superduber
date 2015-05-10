@@ -62,8 +62,9 @@ class UsersController < ApplicationController
     #Send success message to user if receive status 204 from Uber
 
     user_response = params[:Body]
-    user = User.find_by(phone: params[:From])
-    event = user.next_event
+    p user = User.find_by(phone: params[:From])
+    p event = user.next_event
+    event.cancel_ride
     # if user_response == "666"
       #request ride
     # else
