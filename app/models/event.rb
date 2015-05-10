@@ -145,7 +145,7 @@ class Event
     )
   end
 
-  def cancel_ride # remember to test this method
+  def cancel_ride
     response = HTTParty.delete("https://sandbox-api.uber.com/v1/requests/#{self.ride_request_id}",
       headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
         "scope" => "request",
