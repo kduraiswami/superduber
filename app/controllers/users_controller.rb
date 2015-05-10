@@ -42,7 +42,7 @@ class UsersController < ApplicationController
       model = ride_info["vehicle"]["model"]
       plate = ride_info["vehicle"]["license_plate"]
 
-      p message = "#{name} will be arriving in #{eta} mins in a #{make} #{model} (Plate# #{plate})."
+      p message = "#{name} will be arriving in #{eta} mins in a #{make} #{model} (Plate# #{plate}). Reply 'Abort' to cancel ride request."
       event.send_twilio_message(message)
     when "no_drivers_available" #need to testubu
       p message = "No drivers are available"
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
     user_response = params[:Body]
     user = User.find_by(phone: params[:From])
 
-    if user_response == '666' #decide on what this should be
+    if user_response == 'Abort' #decide on what this should be
       p event = user.next_event
       event.cancel_ride
     end
