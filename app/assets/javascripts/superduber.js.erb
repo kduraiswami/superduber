@@ -1,3 +1,4 @@
+<<<<<<< HEAD:app/assets/javascripts/superduber.js.erb
 
 var superduber = angular.module('superduber', ['ngRoute','ngResource']);
 
@@ -5,38 +6,40 @@ var superduber = angular.module('superduber', ['ngRoute','ngResource']);
 
 superduber.config(function ($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
+
   $routeProvider
-    .when('/', {
-      controller: 'HomeController',
-      templateUrl: "<%= asset_path('home.html') %>"
-    })
-    .when('/e', {
-      controller: 'HomeController',
-      templateUrl: "<%= asset_path('events.html') %>"
-    })
-    .otherwise({
-      redirectTo: '/'
-    });
+  .when('/', {
+    controller: 'HomeController',
+    templateUrl: "<%= asset_path('home.html') %>"
+  })
+  .when('/e', {
+    controller: 'HomeController',
+    templateUrl: "<%= asset_path('events.html') %>"
+  })
+  .otherwise({
+    redirectTo: '/'
+  });
 });
 
 
 superduber.controller('HomeController', ['$scope', 'events', function($scope, events) {
-    events.success(function(data){
-        $scope.events = data.events;
-    })
-
+  events.success(function(data){
+    $scope.user = data.user;
+    $scope.events = data.events;
+    console.log("USER UUID");
+    console.log(data.user.uuid);
+  })
 }]);
-
 
 
 superduber.factory('events', ['$http', function($http) {
   return $http.get('/user_events')
-         .success(function(data) {
-           return data;
-         })
-         .error(function(data) {
-           return data;
-         });
+  .success(function(data) {
+   return data;
+ })
+  .error(function(data) {
+   return data;
+ });
 }]);
 
 
