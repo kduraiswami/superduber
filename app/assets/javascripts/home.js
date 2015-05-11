@@ -1,11 +1,3 @@
-// OAuth.initialize('j2tB0yWZSPdySDAy77GBQ3O9wFI');
-
-// OAuth.popup('Uber').done(function(uber){
-//   debugger
-// }).fail(function(err){
-
-// });
-
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
@@ -43,3 +35,10 @@ function setMap(latitude, longitude){
       map.resize()
     };
   }
+
+
+
+  function oauthRedir(){
+    location.assign("oauth2");
+  }
+

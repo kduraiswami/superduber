@@ -18,5 +18,4 @@
 //= require angular-resource
 //= require mapbox-gl
 //= require oauth.min
-//= require oauth-ng
 //= require_tree
