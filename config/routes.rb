@@ -13,13 +13,14 @@ Rails.application.routes.draw do
   get 'oauth2/callback' => 'oauth2#callback'
   get '/' => "home#index"
 
-  # root 'home#index'
+  root 'home#index'
   get 'ubertest' => 'events#ubertest'
 
-  root 'users#index'
+  # root 'users#index'
 
   get '/user_events' => "events#index"
-  get '*path' => redirect('/')
+
+  # match '*path' => "home#index", via: [:get, :post]
 
   mount Resque::Server.new, at: "/resque"
 

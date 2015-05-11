@@ -1,13 +1,18 @@
 
-var superduber = angular.module('superduber', ['ngRoute']);
+var superduber = angular.module('superduber', ['ngRoute','ngResource']);
 
 
 
-superduber.config(function ($routeProvider) {
+superduber.config(function ($routeProvider, $locationProvider) {
+  $locationProvider.html5Mode(true);
   $routeProvider
     .when('/', {
       controller: 'HomeController',
-      templateUrl: 'events.html'
+      templateUrl: "<%= asset_path('home.html') %>"
+    })
+    .when('/e', {
+      controller: 'HomeController',
+      templateUrl: "<%= asset_path('events.html') %>"
     })
     .otherwise({
       redirectTo: '/'
