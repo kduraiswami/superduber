@@ -1,6 +1,9 @@
 // Place all the styles related to the Home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+$superblue: #1FBAD6;
+$superblue-hover: #34A7BC;
+
 body{
   margin:0;
   padding:0;
@@ -37,7 +40,7 @@ body{
   border-radius: 4px;
   font-size: 1em;
   padding: 0.5em;
-  background: #1FBAD6;
+  background: $superblue;
   color: white;
   width: 12em;
   font-family: sans-serif;
@@ -45,7 +48,7 @@ body{
 }
 
 .oauth-btn:hover{
-  background-color: #34A7BC;
+  background-color: $superblue-hover;
 }
 
 .logo{

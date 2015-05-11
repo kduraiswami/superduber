@@ -11,7 +11,7 @@ superduber.config(function ($routeProvider, $locationProvider) {
     controller: 'HomeController',
     templateUrl: "<%= asset_path('home.html') %>"
   })
-  .when('/e', {
+  .when('/e/:id', {
     controller: 'HomeController',
     templateUrl: "<%= asset_path('events.html') %>"
   })
