@@ -1,12 +1,5 @@
   <body ng-controller="HomeController">
-    <p> Events:</p>
-    <ul ng-repeat="event in events">
-      <li>
-        <p>{{ event.name }}</p>
-        <p>{{ event.depart_address }}</p>
-        <p>{{ event.arrival_address }}</p>
-      </li>
-    </ul>
+
 
     <form class="event-form" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)">
       <label>Name</label>

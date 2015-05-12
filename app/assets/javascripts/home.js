@@ -54,6 +54,7 @@ var loadHomePage = function(){
     $(".oauth-btn").text("Create an Event");
   $(".oauth-btn").attr("href", "/events");
   $(".oauth-btn").prop("onclick", null);
+  // $(".content-container").append('')
 })
  .fail(function() {
   console.log("error");
@@ -65,6 +66,3 @@ var loadHomePage = function(){
 $(document).ready(loadHomePage);
 $(document).on('page:change', loadHomePage);
 
-$(".event-form").submit(function(){
-  debugger
-});

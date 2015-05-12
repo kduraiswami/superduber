@@ -17,7 +17,15 @@
       <a href="#" onclick="oauthRedir()" class="oauth-btn">Login With Uber</a>
     </div>
   </div>
-  <div class="content-container">
+  <div  ng-controller="HomeController" class="content-container">
+    <h2> Your Events:</h2>
+    <div class="event-container" ng-repeat="event in events">
+      <div class="event">
+        <p>Name: {{ event.name }}</p>
+        <p>Depart From: {{ event.depart_address }}</p>
+        <p>Arrive At: {{ event.arrival_address }}</p>
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -14,14 +14,21 @@ class EventsController < ApplicationController
 
   def create
     #this has to come from Angular controller
-
-
+    user = User.find_or_create_by(uuid: params[:user_id])
+    user.events.create(event_params)
+    render json: user #nothing to render back
   end
 
   def ubertest
     event = current_user.events.first
     event.update_estimate!
     render json: event
+  end
+
+  private
+
+  def event_params
+    params.require(:event).permit(:name, :depart_address, :arrival_address, :arrival_datetime)
   end
 
 end

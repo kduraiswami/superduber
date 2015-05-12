@@ -25,7 +25,7 @@ superduber.config(function ($routeProvider, $locationProvider) {
 });
 
 
-superduber.controller('HomeController', ['$scope', '$http','events', function($scope, $http,events) {
+superduber.controller('HomeController', ['$scope','$location', '$http','events', function($scope, $location, $http, events) {
 
   var uuid;
 
@@ -65,14 +65,13 @@ superduber.controller('HomeController', ['$scope', '$http','events', function($s
       data: JSON.stringify(formData)
     }
 
-    debugger
     $http(request)
     .success(function(response){
-      debugger
+
     })
     .error(function(response){
-      debugger
     });
+    $location.path("/events")
   };
 
 
