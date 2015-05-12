@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   def index
+    render "layouts/application"
   end
 
   def request_uber # Triggered when user clicks link to accept ride (or if surging, after they accept surge pricing, Uber redirects here)

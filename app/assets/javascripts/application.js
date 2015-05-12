@@ -15,4 +15,7 @@
 //= require angular
 //= require angular-rails-templates
 //= require angular-route
+//= require angular-resource
+//= require mapbox-gl
+//= require oauth.min
 //= require_tree

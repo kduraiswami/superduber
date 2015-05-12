@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html ng-app='superduber'>
 <head>
+  <base href = "/">
   <title>Superduber2</title>
   <%= stylesheet_link_tag  'application', media: 'all' %>
   <%= javascript_include_tag 'application'%>
   <%= csrf_meta_tags %>
+
 </head>
 <body>
 
-<%= yield %>
+  <div ng-view> </div>
+
+
 
 </body>
 </html>

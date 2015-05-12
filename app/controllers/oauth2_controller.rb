@@ -1,7 +1,7 @@
 class Oauth2Controller < ApplicationController
 
   def index
-    redirect_to "https://login.uber.com/oauth/authorize?response_type=code&client_id=#{ENV['UBER_CLIENT_ID']}&scope=request%20profile"
+    redirect_to "https://login.uber.com/oauth/authorize?response_type=code&client_id=#{ENV['UBER_CLIENT_ID']}"
   end
 
   def callback

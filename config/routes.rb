@@ -12,16 +12,18 @@ Rails.application.routes.draw do
   get '/' => "home#index"
   get '/request_uber' => "home#request_uber"
 
-  # root 'home#index'
+  root 'home#index'
   get 'ubertest' => 'events#ubertest'
 
   post '/users/cancel_ride' => 'users#cancel_ride'
   post '/users/uber_status_update' => 'users#uber_status_update'
 
-  root 'users#index'
+  # root 'users#index'
+
 
   get '/user_events' => "events#index"
-  get '*path' => redirect('/')
+
+  # match '*path' => "home#index", via: [:get, :post]
 
   mount Resque::Server.new, at: "/resque"
 

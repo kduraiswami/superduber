@@ -19,3 +19,5 @@
 kai = User.create(first_name: "Kailash", last_name: "Duraiswami", email: "k@d.com", phone:"555-555-5555", uber_access_token:"asdf", uber_refresh_token: "asdf", picture:"Blue_steel.jpg", uuid: "123123")
 
 kai.events.create(name: "Kailash's Wedding", depart_address: "633 Folsom Street San Francisco, CA", depart_lon: "123", depart_lat:"345", arrival_address: "Fisherman's Wharf", arrival_lon:"123", arrival_lat:"434", arrival_datetime: "2015-05-03 19:41:23 -0700")
+
+kai.events.create(name: "Kailash's Divorce", depart_address: "Alcatraz", depart_lon: "123", depart_lat:"345", arrival_address: "DBC", arrival_lon:"123", arrival_lat:"434", arrival_datetime: "2015-05-03 19:41:23 -0700")
