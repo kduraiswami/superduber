@@ -9,11 +9,11 @@ superduber.config(function ($routeProvider, $locationProvider) {
   $routeProvider
   .when('/', {
     controller: 'HomeController',
-    templateUrl: "<%= asset_path('home.html') %>"
+    templateUrl: "<%= asset_path('home.html.erb') %>"
   })
-  .when('/e', {
+  .when('/events', {
     controller: 'HomeController',
-    templateUrl: "<%= asset_path('events.html') %>"
+    templateUrl: "<%= asset_path('eventspage.html') %>"
   })
   .when('/oauth2', {
     redirectTo: '/oauth2'

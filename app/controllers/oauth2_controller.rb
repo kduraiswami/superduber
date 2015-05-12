@@ -31,7 +31,8 @@ class Oauth2Controller < ApplicationController
       user.save!
       session[:uuid] = user_info["uuid"]
 
-      render json: user.inspect
+      # render json: user.inspect
+      redirect_to '/'
     end
 
   end

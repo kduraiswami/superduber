@@ -1,30 +1,28 @@
+$(document).ready(function(){
+  mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
+  (function setLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(setPosition);
+    } else {
+      setMap(37.775710, -122.418172);
+    }
+  })();
 
-
-
-(function setLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(setPosition);
-  } else {
-    setMap(37.775710, -122.418172);
+  function setPosition(position) {
+    userLatitude =  position.coords.latitude;
+    userLongitude = position.coords.longitude;
+    setMap(userLatitude, userLongitude);
   }
-})();
-
-function setPosition(position) {
-  userLatitude =  position.coords.latitude;
-  userLongitude = position.coords.longitude;
-  setMap(userLatitude, userLongitude);
-}
 
 
-function setMap(latitude, longitude){
+  function setMap(latitude, longitude){
 
-  var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'https://www.mapbox.com/mapbox-gl-styles/styles/dark-v7.json',
-    center: [latitude, longitude],
-    zoom: 10,
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'https://www.mapbox.com/mapbox-gl-styles/styles/dark-v7.json',
+      center: [latitude, longitude],
+      zoom: 10,
       // causes pan & zoom handlers not to be applied, similar to
       // .dragging.disable() and other handler .disable() funtions in Leaflet.
       interactive: false
@@ -37,8 +35,30 @@ function setMap(latitude, longitude){
   }
 
 
+ // check for session
+ $.ajax({
+  url: '/session',
+  type: 'GET',
+  dataType: 'JSON',
+})
+ .done(function(response) {
+  if(response != null){}
+    // $(".content-container").append('<form novalidate action="/users/"'+{{user.uuid}}+'"/events/create" method="post">       <input type="submit">
+    //   </form>'
+  })
+ .fail(function() {
+  console.log("error");
+})
 
-  function oauthRedir(){
-    location.assign("oauth2");
-  }
+
+
+});
+
+
+
+
+function oauthRedir(){
+  location.assign("oauth2");
+}
+
 
