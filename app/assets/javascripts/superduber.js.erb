@@ -25,14 +25,61 @@ superduber.config(function ($routeProvider, $locationProvider) {
 });
 
 
-superduber.controller('HomeController', ['$scope', 'events', function($scope, events) {
+superduber.controller('HomeController', ['$scope', '$http','events', function($scope, $http,events) {
+
+  var uuid;
+
   events.success(function(data){
     $scope.user = data.user;
     $scope.events = data.events;
     console.log("USER UUID");
     console.log(data.user.uuid);
-  })
+    uuid = data.user.uuid;
+  });
+
+  // $scope.data= {
+  //   name: "default",
+  //   depart_address: "default",
+  //   arrival_address: "default",
+  //   arrival_datetime: "default"
+  // };
+
+  $scope.submitForm = function(){
+    console.log("posting data..");
+
+
+    var formData={
+      name: $(".event-form .name").val(),
+      depart_address: $(".event-form .dep-addr").val(),
+      arrival_address: $(".event-form .arr-addr").val(),
+      arrival_datetime: $(".event-form .arr-date").val()
+    };
+
+    var request = {
+      method: 'POST',
+      url: '/users/'+uuid+'/events',
+      headers:{
+        'X-Transaction': 'POST Example',
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: JSON.stringify(formData)
+    }
+
+    debugger
+    $http(request)
+    .success(function(response){
+      debugger
+    })
+    .error(function(response){
+      debugger
+    });
+  };
+
+
+
 }]);
+
+
 
 
 superduber.factory('events', ['$http', function($http) {

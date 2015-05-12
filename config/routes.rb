@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   root 'home#index'
   get 'ubertest' => 'events#ubertest'
 
+  # post '/events'
+
   post '/users/cancel_ride' => 'users#cancel_ride'
   post '/users/uber_status_update' => 'users#uber_status_update'
 

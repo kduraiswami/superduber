@@ -8,7 +8,25 @@
       </li>
     </ul>
 
-    <form action = "/users/"{{user.uuid}}"/events/create" method="post">
+    <form class="event-form" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)">
+      <label>Name</label>
+      <input class= "name" type="text" ng-model="form.name"> </input>
+
+      <label>Depart Address</label>
+      <input class="dep-addr" type="text" ng-model="form.depart_address"> </input>
+
+      <label>Arrive Address</label>
+      <input class="arr-addr" type="text" ng-model="form.arrival_address"> </input>
+
+      <label>Date</label>
+      <input class="arr-date" type="text" ng-model="form.arrival_datetime"> </input>
+
+      <input type="submit">
+
+    </form>
+
+<!--
+    <form class= "event-form" action = "/users/"{{user.uuid}}"/events" method="post">
       <label> Name </label><input type = "text" name = "event[name]" placeholder = "Event Name">
 
       <label> Depart Address </label><input type = "text" name = "event[name]" placeholder = "Departure Address">
@@ -25,7 +43,7 @@
       </form>
 
       <input type="submit">
-    </form>
+    </form> -->
   </body>
 
 
