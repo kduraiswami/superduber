@@ -1,4 +1,10 @@
-$(document).ready(function(){
+function oauthRedir(){
+  location.assign("oauth2");
+}
+
+
+
+var loadHomePage = function(){
   mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
   (function setLocation() {
@@ -17,21 +23,23 @@ $(document).ready(function(){
 
 
   function setMap(latitude, longitude){
+    //Persist background image for faster load times
+    $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
 
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'https://www.mapbox.com/mapbox-gl-styles/styles/dark-v7.json',
-      center: [latitude, longitude],
-      zoom: 10,
-      // causes pan & zoom handlers not to be applied, similar to
-      // .dragging.disable() and other handler .disable() funtions in Leaflet.
-      interactive: false
-    });
+    // var map = new mapboxgl.Map({
+    //   container: 'map',
+    //   style: 'https://www.mapbox.com/mapbox-gl-styles/styles/dark-v7.json',
+    //   center: [latitude, longitude],
+    //   zoom: 10,
+    //   // causes pan & zoom handlers not to be applied, similar to
+    //   // .dragging.disable() and other handler .disable() funtions in Leaflet.
+    //   interactive: false
+    // });
 
     // HANDLE RESIZING OF WINDOW
-    window.onresize = function(event){
-      map.resize()
-    };
+    // window.onresize = function(event){
+    //   map.resize()
+    // };
   }
 
 
@@ -43,22 +51,17 @@ $(document).ready(function(){
 })
  .done(function(response) {
   if(response != null){}
-    // $(".content-container").append('<form novalidate action="/users/"'+{{user.uuid}}+'"/events/create" method="post">       <input type="submit">
-    //   </form>'
-  })
+    debugger
+  $(".oauth-btn").text("Create an Event");
+  $(".oauth-btn").attr("href", "/events");
+  $(".oauth-btn").prop("onclick", null);
+})
  .fail(function() {
   console.log("error");
 })
 
-
-
-});
-
-
-
-
-function oauthRedir(){
-  location.assign("oauth2");
 }
 
 
+$(document).ready(loadHomePage);
+$(document).on('page:change', loadHomePage);
