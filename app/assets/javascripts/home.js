@@ -3,21 +3,20 @@ function oauthRedir(){
 }
 
 
-
 var loadHomePage = function(){
   //check for session
   $.ajax({
     url: '/session',
     type: 'GET',
     dataType: 'JSON',
+    cache: false
   })
   .done(function(response) {
-    if(response != null){
+    if(response !== null){
       new Date().getTime(); //prevent caching
-      $(".oauth-btn").text("Create an Event");
-      $(".oauth-btn").attr("href", "/events");
-      $(".oauth-btn").prop("onclick", null);
-      $(".content-container").prepend('<form class="event-form" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)"><label>Name</label><input class= "name" type="text" ng-model="form.name"> </input><label>Depart Address</label><input class="dep-addr" type="text" ng-model="form.depart_address"> </input><label>Arrive Address</label><input class="arr-addr" type="text" ng-model="form.arrival_address"> </input><label>Date</label><input class="arr-date" type="text" ng-model="form.arrival_datetime"> </input><input type="submit"></form>')
+      $(".oauth-btn").toggle();
+      $(".button-container").append("<h2>Welcome<br>"+response.first_name+"!</h2>");
+      $(".event-form").removeClass("hidden");
 
       $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
     }
@@ -30,7 +29,7 @@ var loadHomePage = function(){
 
 
 
-  mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
+  L.mapbox.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
   (function setLocation() {
     if (navigator.geolocation) {
