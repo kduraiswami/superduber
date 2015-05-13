@@ -12,7 +12,7 @@ var loadHomePage = function(){
     cache: false
   })
   .done(function(response) {
-    if(response !== null){
+    if(response.first_name !== null){
       new Date().getTime(); //prevent caching
       $(".oauth-btn").toggle();
       $(".button-container").append("<h2>Welcome<br>"+response.first_name+"!</h2>");
