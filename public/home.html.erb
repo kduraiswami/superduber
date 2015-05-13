@@ -18,10 +18,11 @@
     </div>
   </div>
   <div  ng-controller="HomeController" class="content-container">
-    <h2> Your Events:</h2>
+    <h2>{{user.first_name}}'s Upcoming Events:</h2>
     <div class="event-container" ng-repeat="event in events">
       <div class="event">
         <p>Name: {{ event.name }}</p>
+        <p>Date: {{ event.arrival_datetime | date:'MMMM d, yyyy @ h:mma' }}</p>
         <p>Depart From: {{ event.depart_address }}</p>
         <p>Arrive At: {{ event.arrival_address }}</p>
       </div>
