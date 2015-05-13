@@ -5,6 +5,31 @@ function oauthRedir(){
 
 
 var loadHomePage = function(){
+  //check for session
+  $.ajax({
+    url: '/session',
+    type: 'GET',
+    dataType: 'JSON',
+  })
+  .done(function(response) {
+    if(response != null){
+      new Date().getTime(); //prevent caching
+      $(".oauth-btn").text("Create an Event");
+      $(".oauth-btn").attr("href", "/events");
+      $(".oauth-btn").prop("onclick", null);
+      $(".content-container").prepend('<form class="event-form" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)"><label>Name</label><input class= "name" type="text" ng-model="form.name"> </input><label>Depart Address</label><input class="dep-addr" type="text" ng-model="form.depart_address"> </input><label>Arrive Address</label><input class="arr-addr" type="text" ng-model="form.arrival_address"> </input><label>Date</label><input class="arr-date" type="text" ng-model="form.arrival_datetime"> </input><input type="submit"></form>')
+
+      $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
+    }
+
+    // $(".content-container").append('')
+  })
+  .fail(function() {
+    console.log("error");
+  })
+
+
+
   mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
   (function setLocation() {
@@ -43,26 +68,6 @@ var loadHomePage = function(){
   }
 
 
- // check for session
- $.ajax({
-  url: '/session',
-  type: 'GET',
-  dataType: 'JSON',
-})
- .done(function(response) {
-  if(response != null){
-    $(".oauth-btn").text("Create an Event");
-    $(".oauth-btn").attr("href", "/events");
-    $(".oauth-btn").prop("onclick", null);
-    $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
-
-  }
-
-  // $(".content-container").append('')
-})
- .fail(function() {
-  console.log("error");
-})
 
 }
 
