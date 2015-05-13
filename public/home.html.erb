@@ -4,6 +4,7 @@
   <meta charset='utf-8' />
   <title></title>
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
 </head>
 <body>
   <div class="masthead-container">
@@ -16,8 +17,15 @@
       <a href="#" onclick="oauthRedir()" class="oauth-btn">Login With Uber</a>
     </div>
   </div>
-  <div class="content-container">
-    <!-- currently fixed height. Will fix -->
+  <div  ng-controller="HomeController" class="content-container">
+    <h2> Your Events:</h2>
+    <div class="event-container" ng-repeat="event in events">
+      <div class="event">
+        <p>Name: {{ event.name }}</p>
+        <p>Depart From: {{ event.depart_address }}</p>
+        <p>Arrive At: {{ event.arrival_address }}</p>
+      </div>
+    </div>
   </div>
 </body>
 </html>

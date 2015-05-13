@@ -9,11 +9,11 @@ superduber.config(function ($routeProvider, $locationProvider) {
   $routeProvider
   .when('/', {
     controller: 'HomeController',
-    templateUrl: "<%= asset_path('home.html') %>"
+    templateUrl: "<%= asset_path('home.html.erb') %>"
   })
-  .when('/e', {
+  .when('/events', {
     controller: 'HomeController',
-    templateUrl: "<%= asset_path('events.html') %>"
+    templateUrl: "<%= asset_path('eventspage.html') %>"
   })
   .when('/oauth2', {
     redirectTo: '/oauth2'
@@ -25,14 +25,60 @@ superduber.config(function ($routeProvider, $locationProvider) {
 });
 
 
-superduber.controller('HomeController', ['$scope', 'events', function($scope, events) {
+superduber.controller('HomeController', ['$scope','$location', '$http','events', function($scope, $location, $http, events) {
+
+  var uuid;
+
   events.success(function(data){
     $scope.user = data.user;
     $scope.events = data.events;
     console.log("USER UUID");
     console.log(data.user.uuid);
-  })
+    uuid = data.user.uuid;
+  });
+
+  // $scope.data= {
+  //   name: "default",
+  //   depart_address: "default",
+  //   arrival_address: "default",
+  //   arrival_datetime: "default"
+  // };
+
+  $scope.submitForm = function(){
+    console.log("posting data..");
+
+
+    var formData={
+      name: $(".event-form .name").val(),
+      depart_address: $(".event-form .dep-addr").val(),
+      arrival_address: $(".event-form .arr-addr").val(),
+      arrival_datetime: $(".event-form .arr-date").val()
+    };
+
+    var request = {
+      method: 'POST',
+      url: '/users/'+uuid+'/events',
+      headers:{
+        'X-Transaction': 'POST Example',
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: JSON.stringify(formData)
+    }
+
+    $http(request)
+    .success(function(response){
+
+    })
+    .error(function(response){
+    });
+    $location.path("/events")
+  };
+
+
+
 }]);
+
+
 
 
 superduber.factory('events', ['$http', function($http) {

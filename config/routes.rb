@@ -12,8 +12,13 @@ Rails.application.routes.draw do
   get '/' => "home#index"
   get '/request_uber' => "home#request_uber"
 
+  get '/session' => "users#show"
+  get '/user_events' => "events#index"
+
   root 'home#index'
   get 'ubertest' => 'events#ubertest'
+
+  # post '/events'
 
   post '/users/cancel_ride' => 'users#cancel_ride'
   post '/users/uber_status_update' => 'users#uber_status_update'
@@ -21,7 +26,6 @@ Rails.application.routes.draw do
   # root 'users#index'
 
 
-  get '/user_events' => "events#index"
 
   # match '*path' => "home#index", via: [:get, :post]
 
