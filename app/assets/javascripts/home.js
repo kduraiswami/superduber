@@ -54,6 +54,7 @@ var loadHomePage = function(){
     $(".oauth-btn").text("Create an Event");
   $(".oauth-btn").attr("href", "/events");
   $(".oauth-btn").prop("onclick", null);
+  $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
   // $(".content-container").append('')
 })
  .fail(function() {

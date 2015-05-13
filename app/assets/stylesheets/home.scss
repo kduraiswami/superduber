@@ -52,11 +52,23 @@ body{
   background-color: $superblue-hover;
 }
 
-.logo{
+.logo {
   position: absolute;
   font-family: sans-serif;
-  color:white;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
+.logo h1{
+  display: inline-block;
+}
+
+.prof-pic {
+  display: inline-block;
+}
+
+
 
 .content-container{
   width: 100%;
@@ -81,3 +93,11 @@ body{
   border-radius: $border-rad;
 }
 
+.prof-pic img {
+  border: 2px solid white;
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  margin: auto;
+
+}
