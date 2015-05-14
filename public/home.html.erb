@@ -6,7 +6,7 @@
   <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
 </head>
-<body>
+<body ng-controller="HomeController">
   <div class="masthead-container">
     <div id='map'>
     </div>
@@ -18,6 +18,25 @@
     </div>
   </div>
   <div  ng-controller="HomeController" class="content-container">
+
+    <form class="event-form hidden" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)">
+      <label>Name</label>
+      <input class= "name" type="text" ng-model="form.name"> </input>
+
+      <label>Depart Address</label>
+      <input class="dep-addr" type="text" ng-model="form.depart_address"> </input>
+
+      <label>Arrive Address</label>
+      <input class="arr-addr" type="text" ng-model="form.arrival_address"> </input>
+
+      <label>Date</label>
+      <input class="arr-date" type="datetime-local" ng-model="form.arrival_datetime"> </input>
+
+      <input class="submit-btn" type="submit">
+
+    </form>
+
+
     <h2>{{user.first_name}}'s Upcoming Events:</h2>
     <div class="event-container" ng-repeat="event in events">
       <div class="event">

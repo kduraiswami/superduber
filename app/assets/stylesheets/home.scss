@@ -6,11 +6,15 @@ $superblue-hover: #34A7BC;
 $border-rad: 4px;
 $title-color: rgb(251, 234, 129);
 
+
 body{
   margin:0;
   padding:0;
 }
 
+.hidden{
+  display:none;
+}
 .debug{
   border:1px solid red;
 }
@@ -102,4 +106,38 @@ body{
   border-radius: 50%;
   margin: auto;
 
+}
+
+.event-form {
+  border: 1px solid lightgray;
+  width: 20em;
+  margin: 2em auto;
+  text-align: center;
+  font-family: helvetica;
+}
+
+.event-form input {
+  display: block;
+  /* margin-bottom: 1em; */
+  margin: .5em auto;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  height: 2em;
+  font-size: .8em;
+  width: 22em;
+}
+
+.submit-btn{
+  margin-top: 1.7em !important;
+  background-color: transparent;
+}
+.submit-btn:hover{
+  background-color:lightgray;
+  color:white;
+}
+
+.button-container h2{
+  color:white;
+  font-family: helvetica;
+  text-align: center;
 }

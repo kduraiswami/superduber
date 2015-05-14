@@ -13,9 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require angular
+//= require handlebars
 //= require angular-rails-templates
 //= require angular-route
 //= require angular-resource
-//= require mapbox-gl
 //= require oauth.min
 //= require_tree

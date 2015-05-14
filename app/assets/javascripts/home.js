@@ -3,9 +3,33 @@ function oauthRedir(){
 }
 
 
-
 var loadHomePage = function(){
-  mapboxgl.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
+  //check for session
+  $.ajax({
+    url: '/session',
+    type: 'GET',
+    dataType: 'JSON',
+    cache: false
+  })
+  .done(function(response) {
+    if(response.first_name !== null){
+      new Date().getTime(); //prevent caching
+      $(".oauth-btn").toggle();
+      $(".button-container").append("<h2>Welcome<br>"+response.first_name+"!</h2>");
+      $(".event-form").removeClass("hidden");
+
+      $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
+    }
+
+    // $(".content-container").append('')
+  })
+  .fail(function() {
+    console.log("error");
+  })
+
+
+
+  L.mapbox.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
   (function setLocation() {
     if (navigator.geolocation) {
@@ -43,26 +67,6 @@ var loadHomePage = function(){
   }
 
 
- // check for session
- $.ajax({
-  url: '/session',
-  type: 'GET',
-  dataType: 'JSON',
-})
- .done(function(response) {
-  if(response != null){
-    $(".oauth-btn").text("Create an Event");
-    $(".oauth-btn").attr("href", "/events");
-    $(".oauth-btn").prop("onclick", null);
-    $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
-
-  }
-
-  // $(".content-container").append('')
-})
- .fail(function() {
-  console.log("error");
-})
 
 }
 
