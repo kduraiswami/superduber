@@ -40,18 +40,19 @@
     <h2>{{user.first_name}}'s Upcoming Events:</h2>
     <div class="event-container" ng-repeat="event in events">
       <div class="event">
+        <p class="hidden" id="event-id">{{ event._id.$oid }}</p>
         <p>Name: {{ event.name }}</p>
         <p>Date: {{ event.arrival_datetime | date:'MMMM d, yyyy @ h:mma' }}</p>
         <p>Depart From: {{ event.depart_address }}</p>
         <p>Arrive At: {{ event.arrival_address }}</p>
         <div class="ud-btns">
-        <div class="edit-btn">
-          <i class="fa fa-pencil"></i>Edit
+          <div class="edit-btn">
+            <i class="fa fa-pencil"></i>Edit
+          </div>
+          <div class="delete-btn">
+            <i class="fa fa-trash-o"></i>Delete
+          </div>
         </div>
-        <div class="delete-btn">
-          <i class="fa fa-trash-o"></i>Delete
-        </div>
-      </div>
       </div>
     </div>
   </div>
