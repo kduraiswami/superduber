@@ -19,7 +19,7 @@
   </div>
   <div  ng-controller="HomeController" class="content-container">
 
-    <form class="event-form hidden" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)">
+    <form class="event-form hidden" novalidate ng-controller="HomeController" ng-submit="submitForm(form)">
       <label>Name</label>
       <input class= "name" type="text" ng-model="form.name"> </input>
 
@@ -42,10 +42,10 @@
       <div class="event">
         <div class="event-content">
           <p class="hidden" id="event-id">{{ event._id.$oid }}</p>
-          <p>Name: {{ event.name }}</p>
-          <p>Date: {{ event.arrival_datetime | date:'MMMM d, yyyy @ h:mma' }}</p>
-          <p>Depart From: {{ event.depart_address }}</p>
-          <p>Arrive At: {{ event.arrival_address }}</p>
+          <p class="event-name">Name: {{ event.name }}</p>
+          <p class="arr-date">Date: {{ event.arrival_datetime | date:'MMMM d, yyyy @ h:mma' }}</p>
+          <p class="dep-addr">Depart From: {{ event.depart_address }}</p>
+          <p class="arr-addr">Arrive At: {{ event.arrival_address }}</p>
           <div class="ud-btns">
             <div class="edit-btn">
               <i class="fa fa-pencil"></i>Edit
@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <form class="edit-form hidden" novalidate action="#" ng-submit="editForm(form)">
+        <form class="edit-form hidden" novalidate ng-submit="editForm(form)">
           <p class="hidden" id="edit-event-id">{{ event._id.$oid }}</p>
           <label>Name</label>
           <input class= "name" type="text" value="{{event.name}}"></input>
