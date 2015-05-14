@@ -45,11 +45,13 @@ class UsersController < ApplicationController
 
       p message = "#{name} will be arriving in #{eta} mins in a #{make} #{model} (Plate# #{plate}). Reply 'Abort' to cancel ride request."
       event.send_twilio_message(message)
-    when "no_drivers_available" #need to testubu
-      p message = "No drivers are available"
+    when "no_drivers_available"
+      p message = "Sorry, no drivers are available at this time."
       event.send_twilio_message(message)
+    when "driver_canceled"
+      p message = "Sorry, your driver has canceled the trip."
     when "rider_canceled"
-      p message = "Your request has been cancelled"
+      p message = "Your request has been canceled."
       event.send_twilio_message(message)
     end
 
@@ -59,10 +61,13 @@ class UsersController < ApplicationController
   def cancel_ride # Webhook triggered by user SMS to Twilio
     user_response = params[:Body]
     user = User.find_by(phone: params[:From])
+    event = user.next_event
 
-    if user_response == 'Abort' #decide on what this should be
-      p event = user.next_event
+    if user_response.downcase == 'abort' #decide on what this should be
       event.cancel_ride
+      event.send_twilio_message('Canceling your ride request...')
+    else
+      event.send_twilio_message("Sorry, I didn't understand that. Please reply 'abort' to cancel a ride request, or log into your account for more information.")
     end
 
     render json: { message: "success" }
