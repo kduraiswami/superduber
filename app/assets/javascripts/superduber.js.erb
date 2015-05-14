@@ -47,7 +47,7 @@ superduber.controller('HomeController', ['$scope','$location', '$http','events',
   $scope.submitForm = function(){
     console.log("posting data..");
 
-
+    debugger
     var formData={
       name: $(".event-form .name").val(),
       depart_address: $(".event-form .dep-addr").val(),
@@ -72,10 +72,37 @@ superduber.controller('HomeController', ['$scope','$location', '$http','events',
     })
     .error(function(response){
     });
-    $location.path("/events")
   };
 
+  $scope.editForm = function(e){
+    var eventID = $(".active-edit #edit-event-id").text()
+    var formData={
+      id: eventID,
+      name: $(".edit-form .name").val(),
+      depart_address: $(".edit-form .dep-addr").val(),
+      arrival_address: $(".edit-form .arr-addr").val(),
+      arrival_datetime: $(".edit-form .arr-date").val(),
+    };
 
+
+    var request = {
+      method: 'PUT',
+      url: '/users/'+uuid+'/events/'+ eventID,
+      headers:{
+        'X-Transaction': 'PUT Example',
+        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: JSON.stringify(formData)
+    }
+
+
+    $http(request)
+    .success(function(response){
+    })
+    .error(function(response){
+    });
+
+  }
 
 }]);
 
