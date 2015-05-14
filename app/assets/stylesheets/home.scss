@@ -141,3 +141,26 @@ body{
   font-family: helvetica;
   text-align: center;
 }
+
+.delete-btn:hover {
+  background-color: rgb(255, 75, 75);
+  color: white;
+  border: 1px solid rgb(255, 75, 75);
+
+}
+.edit-btn:hover {
+  background-color: #4B81FF;
+  color: white;
+  border: 1px solid #4B81FF;
+}
+
+.ud-btns div{
+  display: inline-block;
+  padding: .3em;
+  border-radius: 4px;
+  color: gray;
+  cursor:pointer;
+  border:1px solid lightgray;
+  margin-bottom: 1em;
+  background-color: transparent;
+}

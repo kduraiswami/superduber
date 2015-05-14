@@ -4,6 +4,7 @@ function oauthRedir(){
 
 
 var loadHomePage = function(){
+  var session;
   //check for session
   $.ajax({
     url: '/session',
@@ -13,6 +14,7 @@ var loadHomePage = function(){
   })
   .done(function(response) {
     if(response.first_name !== null){
+      session = response;
       new Date().getTime(); //prevent caching
       $(".oauth-btn").toggle();
       $(".button-container").append("<h2>Welcome<br>"+response.first_name+"!</h2>");
@@ -67,6 +69,26 @@ var loadHomePage = function(){
   }
 
 
+  $(document).on('click', '.delete-btn',function(){
+
+    var eventID = $(this).parent().parent().find("#event-id").text();
+    var userID= session.uuid;
+    thisEvent= $(this);
+    $.ajax({
+      url: '/users/'+ userID + '/events/'+ eventID,
+      type: 'DELETE',
+
+    })
+    .done(function(response) {
+      $(thisEvent).parent().parent().remove()
+    })
+    .fail(function() {
+      console.log("error");
+    })
+
+
+
+  });
 
 }
 
