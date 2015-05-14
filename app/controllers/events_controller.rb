@@ -19,10 +19,16 @@ class EventsController < ApplicationController
     render json: user #nothing to render back
   end
 
+  def update
+    event = current_user.events.find_by(_id: params[:id])
+    event.update_attributes(event_params)
+    render json:{edited_event: event}
+  end
+
   def destroy
     event = current_user.events.find_by(_id: params[:id])
     event.delete
-    render json: {deleted_event: event}
+    render json:{deleted_event: event}
   end
 
   def ubertest

@@ -116,7 +116,7 @@ body{
   font-family: helvetica;
 }
 
-.event-form input {
+.event-form input, .edit-form input {
   display: block;
   /* margin-bottom: 1em; */
   margin: .5em auto;

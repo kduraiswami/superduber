@@ -14,6 +14,7 @@ var loadHomePage = function(){
   })
   .done(function(response) {
     if(response.first_name !== null){
+      console.log("Currently in Session");
       session = response;
       new Date().getTime(); //prevent caching
       $(".oauth-btn").toggle();
@@ -86,9 +87,15 @@ var loadHomePage = function(){
       console.log("error");
     })
 
+  });
 
+//Edit
+  $(document).on('click', '.edit-btn', function(){
+    $(this).closest(".event").find(".edit-form").removeClass("hidden").addClass('active-edit');
+    $(this).closest(".event-content").toggle();
 
   });
+
 
 }
 

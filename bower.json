@@ -6,7 +6,8 @@
       "angular-route": "v1.4.0-rc.1",
       "angular-resource": "v1.3.0",
       "jquery": "~2.1.3",
-      "handlebars": "v1.1.2"
+      "handlebars": "v1.1.2",
+      "moment" : "v2.10.3"
     }
     },
     "vendor": {
