@@ -15,6 +15,8 @@ class Event
   field :arrival_coords, type: Array, default: [] #format: [lat, lng]
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
 
+  validates_presence_of :name, :depart_address, :arrival_address, :arrival_datetime
+
   geocoded_by :geocode_user_addresses
   after_validation :geocode,
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
