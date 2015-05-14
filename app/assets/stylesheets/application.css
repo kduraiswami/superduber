@@ -11,6 +11,7 @@
  * file per style scope.
  *
  *= require_tree .
- *= require_mapbox-gl
+ *= require mapbox-gl
+ *= require font-awesome
  *= require_self
  */

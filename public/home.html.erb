@@ -44,6 +44,14 @@
         <p>Date: {{ event.arrival_datetime | date:'MMMM d, yyyy @ h:mma' }}</p>
         <p>Depart From: {{ event.depart_address }}</p>
         <p>Arrive At: {{ event.arrival_address }}</p>
+        <div class="ud-btns">
+        <div class="edit-btn">
+          <i class="fa fa-pencil"></i>Edit
+        </div>
+        <div class="delete-btn">
+          <i class="fa fa-trash-o"></i>Delete
+        </div>
+      </div>
       </div>
     </div>
   </div>
