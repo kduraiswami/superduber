@@ -5,7 +5,7 @@ class EventsController < ApplicationController
       #render something that tells Angular to show the "Login via Uber" page
       redirect_to "/"
     else
-      render json: {user: current_user, events: current_user.events}
+      render json: {user: current_user, events: current_user.upcoming_sorted_events}
       # render json: current_user.events
     end
     puts "CURRENT USER: **************************"
