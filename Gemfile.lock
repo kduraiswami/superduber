@@ -72,6 +72,7 @@ GEM
       dotenv (= 2.0.1)
     erubis (2.7.0)
     execjs (2.5.2)
+    geocoder (1.2.8)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     hike (1.2.3)
@@ -219,6 +220,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   dotenv-rails
+  geocoder
   hirb
   httparty
   jbuilder (~> 2.0)

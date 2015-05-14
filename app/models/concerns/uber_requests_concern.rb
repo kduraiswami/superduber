@@ -9,10 +9,10 @@ module UberRequestsConcern
       },
       body: {
         product_id: event.ride_id,
-        start_latitude: event.depart_lat,
-        start_longitude: event.depart_lon,
-        end_latitude: event.arrival_lat,
-        end_longitude: event.arrival_lon
+        start_latitude: event.depart_coords[0],
+        start_longitude: event.depart_coords[1],
+        end_latitude: event.arrival_coords[0],
+        end_longitude: event.arrival_coords[1]
       }.to_json
     )
   end

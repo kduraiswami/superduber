@@ -1,13 +1,10 @@
 class Event
   include UberRequestsConcern
   include Mongoid::Document
+  include Geocoder::Model::Mongoid
   field :name, type: String
   field :depart_address, type: String
-  field :depart_lon, type: String
-  field :depart_lat, type: String
   field :arrival_address, type: String
-  field :arrival_lon, type: String
-  field :arrival_lat, type: String
   field :arrival_datetime, type: Time #UTC OR LOCAL TIME?
   field :ride_id, type: String # Product code
   field :ride_name, type: String #e.g. UberX
@@ -15,8 +12,25 @@ class Event
   field :surge_confirmation_id, type: String
   field :duration_estimate, type: Integer
   field :pickup_estimate, type: Integer
+  field :arrival_coords, type: Array, default: [] #format: [lat, lng]
+  field :depart_coords, type: Array, default: [] #format: [lat, lng]
+
+  geocoded_by :geocode_user_addresses
+  after_validation :geocode,
+    :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
 
   belongs_to :user
+
+  def geocode_user_addresses
+    depart_coords_hash = Geocoder.search(depart_address)[0].data['geometry']['location']
+    puts depart_coords_hash
+    arrival_coords_hash = Geocoder.search(arrival_address)[0].data['geometry']['location']
+    puts arrival_coords_hash
+    self.depart_coords[0] = depart_coords_hash['lat']
+    self.depart_coords[1] = depart_coords_hash['lng']
+    self.arrival_coords[0] = arrival_coords_hash['lat']
+    self.arrival_coords[1] = arrival_coords_hash['lng']
+  end
 
   ################ SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER ####################
 
@@ -88,11 +102,13 @@ class Event
       "Content-Type" => "application/json",
       },
       query: {
-        latitude: self.depart_lat,
-        longitude: self.depart_lon,
+        # latitude: self.depart_lat,
+        # longitude: self.depart_lon,
+        latitude: self.depart_coords[0],
+        longitude: self.depart_coords[1],
       }
     )
-    
+
     response["products"].each do |product|
       return self.ride_id = product["product_id"] if self.ride_name == product["display_name"]
     end
@@ -110,12 +126,10 @@ class Event
       },
       body: {
         product_id: self.ride_id,
-        start_latitude: self.depart_lat,
-        start_longitude: self.depart_lon,
-        # start_latitude: "37.7863918",
-        # start_longitude: "-122.4535854",
-        end_latitude: self.arrival_lat,
-        end_longitude: self.arrival_lon
+        start_latitude: self.depart_coords[0],
+        start_longitude: self.depart_coords[1],
+        end_latitude: self.arrival_coords[0],
+        end_longitude: self.arrival_coords[1]
       }.to_json
     )
 
@@ -180,7 +194,7 @@ class Event
     self.surge_confirmation_id = response['price']['surge_confirmation_id']
     surge_confirmation_href = response['price']['surge_confirmation_href']
 
-    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://6e99e3af.ngrok.com" : root_url}/request_uber/?event_id=#{self.id.to_s}")
+    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://#{ENV['NGROK_KEY']}.ngrok.com" : root_url}/request_uber/?event_id=#{self.id.to_s}")
 
     message = "Upcoming event '#{self.name}' at #{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}"
 
