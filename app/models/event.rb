@@ -15,6 +15,8 @@ class Event
   field :arrival_coords, type: Array, default: [] #format: [lat, lng]
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
 
+  validates_presence_of :name, :depart_address, :arrival_address, :arrival_datetime
+
   geocoded_by :geocode_user_addresses
   after_validation :geocode,
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
@@ -110,10 +112,12 @@ class Event
     )
 
     response["products"].each do |product|
-      return self.ride_id = product["product_id"] if self.ride_name == product["display_name"]
+      if self.ride_name.downcase == product["display_name"].downcase
+        self.ride_id = product["product_id"]
+        self.save!
+        return self.ride_id
+      end
     end
-
-    nil
 
   end
 

@@ -16,6 +16,9 @@
     <div class = "button-container">
       <a href="#" onclick="oauthRedir()" class="oauth-btn">Login With Uber</a>
     </div>
+    <div class = "logout-container">
+      <a href="#" onclick="logoutRedir()" class="logout-btn">Logout of Uber</a>
+    </div>
   </div>
   <div  ng-controller="HomeController" class="content-container">
 
@@ -23,16 +26,34 @@
     <h2>Schedule a new event for Uber pickup:</h2>
     <form class="event-form hidden" novalidate ng-controller="HomeController" ng-submit="submitForm(form)">
       <label>Event Name:</label>
-      <input class= "name" type="text" ng-model="form.name"> </input>
+      <input class= "name" type="text" ng-model="form.name" required> </input>
 
       <label>Depart Address:</label>
-      <input class="dep-addr" type="text" ng-model="form.depart_address"> </input>
+      <input class="dep-addr" type="text" ng-model="form.depart_address" required> </input>
 
       <label>Arrive Address:</label>
-      <input class="arr-addr" type="text" ng-model="form.arrival_address"> </input>
+      <input class="arr-addr" type="text" ng-model="form.arrival_address" required> </input>
 
       <label>Date & Time (local):</label>
-      <input class="arr-date" type="datetime-local" ng-model="form.arrival_datetime"> </input>
+      <input class="arr-date" type="datetime-local" ng-model="form.arrival_datetime" required> </input>
+
+      <label>Ride Type:</label>
+      <label>
+        <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
+        UberX
+      </label>
+      <label>
+        <input class="ride-name" value="UberBLACK" type="radio" ng-model="form.ride_name" />
+        UberBLACK
+      </label>
+      <label>
+        <input class="ride-name" value="UberSUV" type="radio" ng-model="form.ride_name" />
+        UberSUV
+      </label>
+      <label>
+        <input class="ride-name" value="UberTAXI" type="radio" ng-model="form.ride_name" />
+        UberTAXI
+      </label>
 
       <input class="submit-btn" type="submit">
 
@@ -61,17 +82,35 @@
         <form class="edit-form hidden" novalidate ng-submit="editForm(form)">
           <p class="hidden" id="edit-event-id">{{ event._id.$oid }}</p>
           <label>Name</label>
-          <input class= "name" type="text" value="{{event.name}}"></input>
+          <input class= "name" type="text" value="{{event.name}}" required></input>
 
           <label>Depart Address</label>
-          <input class="dep-addr" type="text" value="{{event.depart_address}}"> </input>
+          <input class="dep-addr" type="text" value="{{event.depart_address}}" required> </input>
 
           <label>Arrive Address</label>
-          <input class="arr-addr" type="text" value="{{event.arrival_address}}"> </input>
+          <input class="arr-addr" type="text" value="{{event.arrival_address}}" required> </input>
 
           <label>Date</label>
-          <input class="arr-date" value="{{ event.arrival_datetime | date: 'yyyy-MM-ddTHH:mm:ss'}}" type="datetime-local" ></input>
+          <input class="arr-date" value="{{ event.arrival_datetime | date: 'yyyy-MM-ddTHH:mm:ss'}}" type="datetime-local" required></input>
           <input class="submit-btn" type="submit">
+
+          <label>
+            <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
+            UberX
+          </label>
+          <label>
+            <input class="ride-name" value="UberBLACK" type="radio" ng-model="form.ride_name" />
+            UberBLACK
+          </label>
+          <label>
+            <input class="ride-name" value="UberSUV" type="radio" ng-model="form.ride_name" />
+            UberSUV
+          </label>
+          <label>
+            <input class="ride-name" value="UberTAXI" type="radio" ng-model="form.ride_name" />
+            UberTAXI
+          </label>
+
         </form>
 
       </div>
