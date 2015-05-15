@@ -22,6 +22,7 @@ var loadHomePage = function(){
     $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
   }
 
+
   //add
 
   // $(document).on("submit", ".event-form", function(event){
@@ -58,7 +59,6 @@ var loadHomePage = function(){
 
 
   // });
-
 
 
   //delete
