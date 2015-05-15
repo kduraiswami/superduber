@@ -20,7 +20,8 @@ Rails.application.routes.draw do
 
   # post '/events'
 
-  post '/users/cancel_ride' => 'users#cancel_ride'
+  post '/users/cancel_ride_via_sms' => 'users#cancel_ride_via_sms'
+  post '/users/cancel_ride_via_web' => 'users#cancel_ride_via_web'
   post '/users/uber_status_update' => 'users#uber_status_update'
 
   # root 'users#index'

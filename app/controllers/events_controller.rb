@@ -15,8 +15,10 @@ class EventsController < ApplicationController
   def create
     user = User.find_or_create_by(uuid: params[:user_id])
     new_event = user.events.create(event_params)
-    new_event.update_ride_id!
-    render json:{new_event} #nothing to render back
+
+    p new_event.update_ride_id!
+    redirect_to "/"
+
   end
 
   def update
