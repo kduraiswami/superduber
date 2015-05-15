@@ -15,23 +15,44 @@ class Event
   field :arrival_coords, type: Array, default: [] #format: [lat, lng]
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
 
-  validates_presence_of :name, :depart_address, :arrival_address, :arrival_datetime
+  validates_presence_of :name, :arrival_datetime
+  validate :arrival_address_found, :depart_address_found
+
 
   geocoded_by :geocode_user_addresses
-  after_validation :geocode,
+  before_validation :geocode,
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
 
   belongs_to :user
 
   def geocode_user_addresses
-    depart_coords_hash = Geocoder.search(depart_address)[0].data['geometry']['location']
-    puts depart_coords_hash
-    arrival_coords_hash = Geocoder.search(arrival_address)[0].data['geometry']['location']
-    puts arrival_coords_hash
-    self.depart_coords[0] = depart_coords_hash['lat']
-    self.depart_coords[1] = depart_coords_hash['lng']
-    self.arrival_coords[0] = arrival_coords_hash['lat']
-    self.arrival_coords[1] = arrival_coords_hash['lng']
+    depart_search_results = Geocoder.search(depart_address)[0]
+    if depart_search_results
+      depart_coords_hash = depart_search_results.data['geometry']['location']
+      puts depart_coords_hash
+      self.depart_coords[0] = depart_coords_hash['lat']
+      self.depart_coords[1] = depart_coords_hash['lng']
+    end
+
+    arrival_search_results = Geocoder.search(arrival_address)[0]
+    if arrival_search_results
+      arrival_coords_hash = arrival_search_results.data['geometry']['location']
+      puts arrival_coords_hash
+      self.arrival_coords[0] = arrival_coords_hash['lat']
+      self.arrival_coords[1] = arrival_coords_hash['lng']
+    end
+  end
+
+  def arrival_address_found
+    unless arrival_coords[0] && arrival_coords[1]
+      errors.add(:arrival_address, 'can\'t be located')
+    end
+  end
+
+  def depart_address_found
+    unless depart_coords[0] && depart_coords[1]
+      errors.add(:depart_address, 'can\'t be located')
+    end
   end
 
   ###### SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER #######

@@ -16,6 +16,10 @@
   <div class="content-container">
     <h2>Schedule a new event for Uber pickup:</h2>
 
+    <% if @error %>
+      <div><%= @error %></div>
+    <% end %>
+
     <form action="/users/<%= current_user.uuid %>/events" method="post" class="event-form">
       <p class="hidden" id="user-id"><%= current_user.uuid %></p>
       <label>Event Name:</label>
