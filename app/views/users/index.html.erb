@@ -1,0 +1,113 @@
+  <div class="masthead-container">
+    <div id='map'>
+    </div>
+    <nav class="logo">
+      <h1>SuperDuber</h1>
+      <div class="prof-pic">
+        <img src=<%= current_user.picture %>>
+      </div>
+    </nav>
+    <div class="logout-container">
+      <a href="/logout" class="logout-btn">Logout of Uber</a>
+    </div>
+  </div>
+  <div class="content-container">
+    <h2>Schedule a new event for Uber pickup:</h2>
+
+
+    <form action="/users/<%= current_user.uuid %>/events" method="post" class="event-form">
+      <label>Event Name:</label>
+      <input name="event[name]" class="name" type="text" required />
+
+      <label>Depart Address:</label>
+      <input name="event[depart_address]" class="dep-addr" type="text" required />
+
+      <label>Arrive Address:</label>
+      <input name="event[arrival_address]" class="arr-addr" type="text" required />
+
+      <label>Date & Time (local):</label>
+      <input name="event[arrival_datetime]" class="arr-date" type="datetime-local" required />
+
+      <label>Ride Type:</label>
+      <label>
+        <input name="event[ride_name]" class="ride-name" value="UberX" type="radio" />
+        UberX
+      </label>
+      <label>
+        <input name="event[ride_name]" class="ride-name" value="UberBLACK" type="radio" />
+        UberBLACK
+      </label>
+      <label>
+        <input name="event[ride_name]" class="ride-name" value="UberSUV" type="radio"  />
+        UberSUV
+      </label>
+      <label>
+        <input name="event[ride_name]" class="ride-name" value="UberTAXI" type="radio" />
+        UberTAXI
+      </label>
+
+      <input class="submit-btn" type="submit">
+
+    </form>
+
+    <hr />
+
+    <h2>Your Upcoming Events:</h2>
+    <div class="event-container">
+      <div class="event">
+        <div class="event-content">
+          <% events.each do |event| %>
+            <p class="event-name">Name: <%= event.name %></p>
+            <p class="arr-date">Date: <%= event.arrival_datetime %></p> <!-- FORMAT NICELY -->
+            <p class="dep-addr">Depart From: <%= event.depart_address %></p>
+            <p class="arr-addr">Arrive At: <%= event.arrival_address %></p>
+            <div class="ud-btns">
+              <div class="edit-btn">
+                <i class="fa fa-pencil"></i>Edit
+              </div>
+              <div class="delete-btn">
+                <i class="fa fa-trash-o"></i>Delete
+              </div>
+            </div>
+            <hr />
+          <% end %>
+        </div>
+
+        <form class="edit-form hidden">
+          <label>Name</label>
+          <input class= "name" type="text" value="{{event.name}}" required></input>
+
+          <label>Depart Address</label>
+          <input class="dep-addr" type="text" value="{{event.depart_address}}" required> </input>
+
+          <label>Arrive Address</label>
+          <input class="arr-addr" type="text" value="{{event.arrival_address}}" required> </input>
+
+          <label>Date</label>
+          <input class="arr-date" value="{{ event.arrival_datetime | date: 'yyyy-MM-ddTHH:mm:ss'}}" type="datetime-local" required></input>
+          <input class="submit-btn" type="submit">
+
+          <label>
+            <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
+            UberX
+          </label>
+          <label>
+            <input class="ride-name" value="UberBLACK" type="radio" ng-model="form.ride_name" />
+            UberBLACK
+          </label>
+          <label>
+            <input class="ride-name" value="UberSUV" type="radio" ng-model="form.ride_name" />
+            UberSUV
+          </label>
+          <label>
+            <input class="ride-name" value="UberTAXI" type="radio" ng-model="form.ride_name" />
+            UberTAXI
+          </label>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

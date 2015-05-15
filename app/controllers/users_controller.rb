@@ -3,11 +3,22 @@ require 'twilio-ruby'
 class UsersController < ApplicationController
 
   def index
-    render json: User.all
+
   end
 
   def show
     render json: current_user
+  end
+
+  def update #put route triggered by phone number submission
+    phone = "+1"+user_params[:phone]
+    user = User.find_by(uuid: current_user.uuid)
+    user.phone = phone
+    user.save!
+    redirect_to '/'
+  end
+
+  def new
   end
 
   def edit
@@ -58,7 +69,7 @@ class UsersController < ApplicationController
     render json: { message: message }
   end
 
-  def cancel_ride # Webhook triggered by user SMS to Twilio
+  def cancel_ride_via_sms # Webhook triggered by user SMS to Twilio
     user_response = params[:Body]
     user = User.find_by(phone: params[:From])
     event = user.next_event
@@ -73,5 +84,17 @@ class UsersController < ApplicationController
     render json: { message: "success" }
   end
 
+  def cancel_ride_via_web
+    event = Event.find(params[:event_id])
+    p event.cancel_ride
+    redirect_to '/'
+  end
+
+
+  private
+
+  def user_params
+    params.permit(:phone)
+  end
 
 end

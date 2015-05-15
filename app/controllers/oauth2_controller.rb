@@ -1,7 +1,7 @@
 class Oauth2Controller < ApplicationController
 
   def index
-    redirect_to "https://login.uber.com/oauth/authorize?response_type=code&client_id=#{ENV['UBER_CLIENT_ID']}"
+    redirect_to "https://login.uber.com/oauth/authorize?response_type=code&client_id=#{ENV['UBER_CLIENT_ID']}&scope=profile%20request"
   end
 
   def callback
@@ -32,7 +32,8 @@ class Oauth2Controller < ApplicationController
       session[:uuid] = user_info["uuid"]
 
       # render json: user.inspect
-      redirect_to '/'
+      redirect_to "/"
+
     end
 
   end
