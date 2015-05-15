@@ -41,7 +41,7 @@ class Event
   end
 
   def estimated_duration
-    self.duration_estimate + self.pickup_estimate
+    (self.duration_estimate + self.pickup_estimate).minutes
   end
 
   def update_estimate!
