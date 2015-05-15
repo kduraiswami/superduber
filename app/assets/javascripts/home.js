@@ -63,7 +63,7 @@ var loadHomePage = function(){
   //delete
 
   $(document).on("click", ".delete-btn", function(){
-
+    var result = confirm("Are you sure?");
     if (result){
       var userID = $(this).closest(".event-content").find("#user-id").text()
       var eventID = $(this).closest(".event-content").find("#event-id").text()
