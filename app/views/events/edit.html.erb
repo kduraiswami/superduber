@@ -1,36 +1,43 @@
-<form class="edit-form" action="/users/<%= @user.uuid %>/events/<%= @event.id %>" method="post">
+<html class= "edit-container">
+<div>
+  <h2 class="edit-title"> Edit your event </h2>
+  <form class="edit-form" action="/users/<%= @user.uuid %>/events/<%= @event.id %>" method="post">
+    <div class="txt-inputs-container">
+      <input type="hidden" name="_method" value="put">
 
-  <input type="hidden" name="_method" value="put">
+      <label>Name</label>
+      <input class= "name" name= "[event]name" type="text" value="<%= @event.name %>" required></input>
 
-  <label>Name</label>
-  <input class= "name" name= "[event]name" type="text" value="<%= @event.name %>" required></input>
+      <label>Depart Address</label>
+      <input class="dep-addr" name="event[depart_address]" type="text" value="<%= @event.depart_address %>" required> </input>
 
-  <label>Depart Address</label>
-  <input class="dep-addr" name="event[depart_address]" type="text" value="<%= @event.depart_address %>" required> </input>
+      <label>Arrive Address</label>
+      <input class="arr-addr" name="event[arrival_address]" type="text" value="<%= @event.arrival_address %>" required> </input>
 
-  <label>Arrive Address</label>
-  <input class="arr-addr" name="event[arrival_address]" type="text" value="<%= @event.arrival_address %>" required> </input>
+      <label>Date</label>
+      <input class="arr-date" name="event[arrival_datetime]" value="<%= @event.arrival_datetime.strftime('%Y-%m-%dT%H:%M:%S') %>" type="datetime-local" required></input>
+    </div>
+    <div class="edit-radio-btns">
+      <label>
+        <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
+        UberX
+      </label>
+      <label>
+        <input class="ride-name" name="event[ride_name]" value="UberBLACK" type="radio" ng-model="form.ride_name" />
+        UberBLACK
+      </label>
+      <label>
+        <input class="ride-name" name="event[ride_name]" value="UberSUV" type="radio" ng-model="form.ride_name" />
+        UberSUV
+      </label>
+      <label>
+        <input class="ride-name" name="event[ride_name]" value="UberTAXI" type="radio" ng-model="form.ride_name" />
+        UberTAXI
+      </label>
+    </div>
+    <input class="submit-btn" type="submit">
 
-  <label>Date</label>
-  <input class="arr-date" name="event[arrival_datetime]" value="<%= @event.arrival_datetime %>" type="datetime-local" required></input>
+  </form>
 
-  <label>
-    <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
-    UberX
-  </label>
-  <label>
-    <input class="ride-name" name="event[ride_name]" value="UberBLACK" type="radio" ng-model="form.ride_name" />
-    UberBLACK
-  </label>
-  <label>
-    <input class="ride-name" name="event[ride_name]" value="UberSUV" type="radio" ng-model="form.ride_name" />
-    UberSUV
-  </label>
-  <label>
-    <input class="ride-name" name="event[ride_name]" value="UberTAXI" type="radio" ng-model="form.ride_name" />
-    UberTAXI
-  </label>
-
-  <input class="submit-btn" type="submit">
-
-</form>
+</div>
+</html>
