@@ -29,7 +29,6 @@ class EventsController < ApplicationController
   def update
     user = User.find_or_create_by(uuid: params[:user_id])
     event = user.events.find_by(id: params[:id])
-    byebug
     event.update_attributes(event_params)
     event.update_ride_id!
     redirect_to "/"
