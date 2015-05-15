@@ -1,5 +1,7 @@
-<h3>Thanks, <%= event.user.first_name %>!  Your Uber has been requested!  We'll send you a text message as soon as a driver is on the way.</h3>
+<html class="uber-request-container">
+<h3 class="req-msg">Thanks, <%= event.user.first_name %>!  Your Uber has been requested!  We'll send you a text message as soon as a driver is on the way.</h3>
 
-<form action="/users/cancel_ride_via_web?event_id=<%= event.id.to_s %>" method="post">
+<form class="req-form" action="/users/cancel_ride_via_web?event_id=<%= event.id.to_s %>" method="post">
   <input value="Click to Cancel Request" class="submit-btn" type="submit" />
 </form>
+</html>
