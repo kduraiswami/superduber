@@ -144,6 +144,7 @@ class Event
       end
     end
 
+    nil
   end
 
   ########### REQUESTING, CHECKING, UPDATING, CANCELLING RIDES ############

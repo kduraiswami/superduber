@@ -12,7 +12,10 @@ var loadHomePage = function(){
         type: 'DELETE'
       })
       .done(function(response) {
-        $("p:contains("+response.deleted_event._id.$oid+")").closest(".event").remove();
+        $deleted_event = $("p:contains("+response.deleted_event._id.$oid+")").closest(".event");
+        $deleted_event.fadeOut('slow', function(){
+          $deleted_event.remove()
+        })
       })
       .fail(function() {
         console.log("error");
@@ -21,5 +24,12 @@ var loadHomePage = function(){
   })
 }
 
+var fadeOutSuccess = function(){
+  $(".success").delay(5000).fadeOut('slow');
+}
+
 $(document).ready(loadHomePage);
 $(document).on('page:change', loadHomePage);
+
+$(document).ready(fadeOutSuccess);
+$(document).on('page:change', fadeOutSuccess);

@@ -18,12 +18,16 @@ class EventsController < ApplicationController
   def create
     user = User.find_by(uuid: params[:user_id])
     @event = user.events.new(event_params)
-    if @event.save
-      p @event.update_ride_id!
+    if @event.save && @event.update_ride_id!
       @event.schedule_bg_job
       redirect_to "/?message=success#upcoming"
     else
-      @errors = @event.errors.full_messages
+      if @event.valid? #uber update_ride_id! failed
+        @errors = ['Cannot find rides for departure address','Please make sure it is accurate']
+        @event.destroy
+      else
+        @errors = @event.errors.full_messages
+      end
       render "users/index", locals: {current_user: user}
     end
   end
