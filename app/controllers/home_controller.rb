@@ -1,11 +1,15 @@
 class HomeController < ApplicationController
   def index
-    if current_user
-      events = current_user.upcoming_sorted_events
-      @event = Event.new
-      render "users/index", locals: {events: events, current_user: current_user}
-      puts "CURRENT USER: #{current_user}"
-    else
+    if current_user #if user is logged in
+      if current_user.phone #if they already have phone saved in DB
+        events = current_user.upcoming_sorted_events
+        @event = Event.new
+        render "users/index", locals: {events: events, current_user: current_user}
+        puts "CURRENT USER: #{current_user}"
+      else #if they are logged in but don't have phone saved
+        redirect_to edit_user, locals: {current_user: current_user}
+      end
+    else #user is not logged in so render logged out landing page
       #render logged out ERB page
     end
   end

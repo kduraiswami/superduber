@@ -10,6 +10,17 @@ class UsersController < ApplicationController
     render json: current_user
   end
 
+  def update #put route triggered by phone number submission
+    phone = "+1"+user_params[:phone]
+    user = User.find_by(uuid: current_user.uuid)
+    user.phone = phone
+    user.save!
+    redirect_to '/'
+  end
+
+  def new
+  end
+
   def edit
   end
 
@@ -73,5 +84,11 @@ class UsersController < ApplicationController
     render json: { message: "success" }
   end
 
+
+  private
+
+  def user_params
+    params.permit(:phone)
+  end
 
 end
