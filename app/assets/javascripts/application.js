@@ -12,11 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require angular
 //= require moment
 //= require handlebars
-//= require angular-rails-templates
-//= require angular-route
-//= require angular-resource
 //= require oauth.min
 //= require_tree
