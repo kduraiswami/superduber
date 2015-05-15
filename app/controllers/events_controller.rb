@@ -12,6 +12,11 @@ class EventsController < ApplicationController
     p current_user
   end
 
+  def edit
+    @user = User.find_by(uuid: params[:user_id])
+    @event = @user.events.find_by(id: params[:id])
+  end
+
   def create
     user = User.find_or_create_by(uuid: params[:user_id])
     new_event = user.events.create(event_params)
@@ -22,15 +27,16 @@ class EventsController < ApplicationController
   end
 
   def update
-    event = current_user.events.find_by(_id: params[:id])
+    user = User.find_or_create_by(uuid: params[:user_id])
+    event = user.events.find_by(id: params[:id])
+    byebug
     event.update_attributes(event_params)
     event.update_ride_id!
-    render json:{edited_event: event}
+    redirect_to "/"
   end
 
   def destroy
-    user= User.where(uuid: current_user.id).first
-    event = user.events.find_by(_id: params[:id])
+    event = User.find_by(uuid: params[:user_id]).events.find_by(_id: params[:id])
     event.delete
     render json:{deleted_event: event}
   end

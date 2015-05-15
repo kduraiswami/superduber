@@ -21,42 +21,7 @@ var loadHomePage = function(){
     //Persist background image for faster load times
     $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
   }
-  //add
 
-  $(document).on("submit", ".event-form", function(event){
-    event.preventDefault();
-    var userID = $("#user-id").text();
-    //could use serialize
-    var eventName = $(".event-form .name").val()
-    var depAddr = $(".event-form .dep-addr").val()
-    var arrAddr = $(".event-form .arr-addr").val()
-    var arrDate = $(".event-form .arr-date").val()
-    var date = $(".event-form .name").val()
-    var rideType=$(".event-form").serialize()
-    $.ajax({
-      url: '/users/'+userID+'/events',
-      type: 'POST',
-      dataType: 'JSON',
-      data: { event:{
-        name: eventName,
-        depart_address: depAddr ,
-        arrival_address: arrAddr,
-        arrival_datetime: arrDate,
-        ride_name: rideType.replace(/^(ride-type=)/,"")}
-      }
-    })
-    .done(function() {
-      console.log("success");
-    })
-    .fail(function() {
-      console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
-    });
-
-
-  });
 
 
 
@@ -67,7 +32,6 @@ var loadHomePage = function(){
     if (result){
       var userID = $(this).closest(".event-content").find("#user-id").text()
       var eventID = $(this).closest(".event-content").find("#event-id").text()
-      debugger
       $.ajax({
         url: '/users/'+userID+'/events/'+eventID,
         type: 'DELETE'
