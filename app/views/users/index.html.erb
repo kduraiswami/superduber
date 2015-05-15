@@ -16,8 +16,14 @@
   <div class="content-container">
     <h2>Schedule a new event for Uber pickup:</h2>
 
-    <% if @error %>
-      <div><%= @error %></div>
+    <% if @event.errors %>
+      <div class="event error">
+        <ul>
+        <% @event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
     <% end %>
 
     <form action="/users/<%= current_user.uuid %>/events" method="post" class="event-form">
@@ -32,27 +38,27 @@
       <input name="event[arrival_address]" class="arr-addr" type="text" value="<%= @event.arrival_address %>" required />
 
       <label>Date & Time (local):</label>
-      <input name="event[arrival_datetime]" class="arr-date" type="datetime-local" value="<%= @event.arrival_datetime %>" required />
+      <input name="event[arrival_datetime]" class="arr-date" type="datetime-local" required />
 
       <label>Ride Type:</label>
       <div class="radio-btns">
         <label>
-          <input name="event[ride_name]" value="UberX" type="radio" />
+          <input name="event[ride_name]" value="UberX" type="radio" <%= 'checked="checked"' if @event.ride_name == 'UberX' %> />
           UberX
         </label>
         <br>
         <label>
-          <input name="event[ride_name]" value="UberBLACK" type="radio" />
+          <input name="event[ride_name]" value="UberBLACK" type="radio" <%= 'checked="checked"' if @event.ride_name == 'UberBLACK' %> />
           UberBLACK
         </label>
         <br>
         <label>
-          <input name="event[ride_name]" value="UberSUV" type="radio"  />
+          <input name="event[ride_name]" value="UberSUV" type="radio" <%= 'checked="checked"' if @event.ride_name == 'UberSUV' %> />
           UberSUV
         </label>
         <br>
         <label>
-          <input name="event[ride_name]" value="UberTAXI" type="radio" />
+          <input name="event[ride_name]" value="UberTAXI" type="radio" <%= 'checked="checked"' if @event.ride_name == 'UberTAXI' %> />
           UberTAXI
         </label>
         <br>
@@ -67,7 +73,7 @@
     <div class="event-container">
 
       <% if @success %>
-        <div><%= @success %></div>
+        <div class="event success"><%= @success %></div>
       <% end %>
 
       <% current_user.upcoming_sorted_events.each do |event| %>

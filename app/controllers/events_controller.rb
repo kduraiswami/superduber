@@ -23,7 +23,6 @@ class EventsController < ApplicationController
       @event.schedule_bg_job
       redirect_to "/?message=success#upcoming"
     else
-      @error = @event.errors.full_messages.to_sentence
       render "users/index", locals: {current_user: user}
     end
   end
