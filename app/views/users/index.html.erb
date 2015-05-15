@@ -13,7 +13,8 @@
   </div>
   <div class="content-container">
     <h2>Schedule a new event for Uber pickup:</h2>
-    <form class="event-form hidden" >
+    <form class="event-form" >
+      <p class="hidden" id="user-id"><%= current_user.id %></p>
       <label>Event Name:</label>
       <input class= "name" type="text" required>
 
@@ -27,23 +28,28 @@
       <input class="arr-date" type="datetime-local" required />
 
       <label>Ride Type:</label>
-      <label>
-        <input class="ride-name" value="UberX" type="radio" />
-        UberX
-      </label>
-      <label>
-        <input class="ride-name" value="UberBLACK" type="radio" />
-        UberBLACK
-      </label>
-      <label>
-        <input class="ride-name" value="UberSUV" type="radio"  />
-        UberSUV
-      </label>
-      <label>
-        <input class="ride-name" value="UberTAXI" type="radio" />
-        UberTAXI
-      </label>
-
+      <div class="radio-btns">
+        <label>
+          <input class="ride-name" name="ride-type" value="UberX" type="radio" />
+          UberX
+        </label>
+        <br>
+        <label>
+          <input class="ride-name" name="ride-type" value="UberBLACK" type="radio" />
+          UberBLACK
+        </label>
+        <br>
+        <label>
+          <input class="ride-name" name="ride-type" value="UberSUV" type="radio"  />
+          UberSUV
+        </label>
+        <br>
+        <label>
+          <input class="ride-name" name="ride-type" value="UberTAXI" type="radio" />
+          UberTAXI
+        </label>
+        <br>
+      </div>
       <input class="submit-btn" type="submit">
 
     </form>
@@ -52,23 +58,24 @@
 
     <h2>Your Upcoming Events:</h2>
     <div class="event-container">
+      <% User.where(uuid:current_user.id).first.events.each do |event| %>
+      <%= current_user.id %>
       <div class="event">
         <div class="event-content">
-          <% events.each do |event| %>
-            <p class="event-name">Name: <%= event.name %></p>
-            <p class="arr-date">Date: <%= event.arrival_datetime %></p> <!-- FORMAT NICELY -->
-            <p class="dep-addr">Depart From: <%= event.depart_address %></p>
-            <p class="arr-addr">Arrive At: <%= event.arrival_address %></p>
-            <div class="ud-btns">
-              <div class="edit-btn">
-                <i class="fa fa-pencil"></i>Edit
-              </div>
-              <div class="delete-btn">
-                <i class="fa fa-trash-o"></i>Delete
-              </div>
+          <p class="hidden" id="user-id"><%= current_user.id %></p>
+          <p class="hidden" id="event-id"><%= event.id %></p>
+          <p class="event-name">Name: <%= event.name %></p>
+          <p class="arr-date">Date: <%= event.arrival_datetime %></p> <!-- FORMAT NICELY -->
+          <p class="dep-addr">Depart From: <%= event.depart_address %></p>
+          <p class="arr-addr">Arrive At: <%= event.arrival_address %></p>
+          <div class="ud-btns">
+            <div class="edit-btn">
+              <i class="fa fa-pencil"></i>Edit
             </div>
-            <hr />
-          <% end %>
+            <div class="delete-btn">
+              <i class="fa fa-trash-o"></i>Delete
+            </div>
+          </div>
         </div>
 
         <form class="edit-form hidden">
@@ -105,6 +112,7 @@
         </form>
 
       </div>
+      <% end %>
     </div>
   </div>
 </body>

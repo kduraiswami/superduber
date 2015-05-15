@@ -139,9 +139,10 @@ body{
   margin: 2em auto;
   text-align: center;
   font-family: helvetica;
+  padding-top: 1em;
 }
 
-.event-form input, .edit-form input {
+.name, .dep-addr, .arr-addr, .arr-date {
   display: block;
   /* margin-bottom: 1em; */
   margin: .5em auto;
@@ -151,10 +152,22 @@ body{
   font-size: .8em;
   width: 22em;
 }
+.radio-btns{
+  text-align:left;
+  width: 7em;
+  margin:1em auto;
+}
+.radio-btns input{
+  margin:0 auto;
+  text-align:center;
+}
 
 .submit-btn{
-  margin-top: 1.7em !important;
+  margin-top: 1.7em;
   background-color: transparent;
+  border: 1px solid lightgray;
+  border-radius: $border-rad;
+  margin-bottom: 1em;
 }
 .submit-btn:hover{
   background-color:lightgray;

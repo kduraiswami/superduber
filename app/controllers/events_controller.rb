@@ -13,12 +13,10 @@ class EventsController < ApplicationController
   end
 
   def create
-    #this has to come from Angular controller
     user = User.find_or_create_by(uuid: params[:user_id])
     new_event = user.events.create(event_params)
-    puts "$$$$$$$ "
-    p new_event.update_ride_id!
-    render json: user #nothing to render back
+    new_event.update_ride_id!
+    render json:{new_event} #nothing to render back
   end
 
   def update
@@ -29,7 +27,9 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    event = current_user.events.find_by(_id: params[:id])
+    byebug
+    user= User.where(uuid: current_user.id).first
+    event = user.events.find_by(_id: params[:id])
     event.delete
     render json:{deleted_event: event}
   end
