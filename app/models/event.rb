@@ -81,13 +81,17 @@ class Event
     puts "RIDE ESTIMATE RESPONSE:"
     p response = request_estimate_response(self)
 
-    self.pickup_estimate = response['pickup_estimate']
-    self.duration_estimate = (response['trip']['duration_estimate']/60.0).ceil
-    self.save!
+    if response['message'] == 'Distance between two points exceeds 100 miles'
+      nil
+    else
+      self.pickup_estimate = response['pickup_estimate']
+      self.duration_estimate = (response['trip']['duration_estimate']/60.0).ceil
+      self.save!
 
-    puts "ESTIMATED DURATION: #{estimated_duration} (minutes)"
+      puts "ESTIMATED DURATION: #{estimated_duration} (minutes)"
 
-    response
+      response
+    end
   end
 
   def notification_buffer
