@@ -65,7 +65,7 @@
           <p class="hidden" id="user-id"><%= current_user.uuid %></p>
           <p class="hidden" id="event-id"><%= event.id %></p>
           <p class="event-name">Name: <%= event.name %></p>
-          <p class="arr-date">Date: <%= event.arrival_datetime %></p> <!-- FORMAT NICELY -->
+          <p class="arr-date">Date: <%= event.arrival_datetime.strftime("%B %d, %Y @ %l:%M%P") %></p> <!-- FORMAT NICELY -->
           <p class="dep-addr">Depart From: <%= event.depart_address %></p>
           <p class="arr-addr">Arrive At: <%= event.arrival_address %></p>
           <div class="ud-btns">
