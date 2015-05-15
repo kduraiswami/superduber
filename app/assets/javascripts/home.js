@@ -99,6 +99,13 @@ var loadHomePage = function(){
 
   });
 
+//Instruction Modal
+  $(document).on('click','.submit-btn', function(){
+    console.log('hit submit')
+    console.log($('#thankYouModal'))
+    $('#thankYouModal').show
+  })
+
 
 }
 
