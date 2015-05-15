@@ -15,8 +15,8 @@ class EventsController < ApplicationController
   def create
     user = User.find_by(uuid: params[:user_id])
     new_event = user.events.create(event_params)
-
     p new_event.update_ride_id!
+    new_event.schedule_bg_job
     redirect_to "/"
   end
 
