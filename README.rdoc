@@ -2,7 +2,7 @@
 
 Attention UBER HACKATHON JUDGES - 
 
-our site can be viewed remotely at superduber.herokuapp.com
+our site can be viewed remotely at http://superduber.herokuapp.com
 our sample test video is https://www.youtube.com/watch?v=ZDebXU7yxAc 
 
 please feel free to clone our repo locally as well :)
