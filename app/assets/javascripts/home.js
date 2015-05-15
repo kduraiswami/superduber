@@ -1,108 +1,106 @@
-// function oauthRedir(){
-//   location.assign("oauth2");
-// }
-
-// function logoutRedir(){
-//   location.assign("logout")
-// }
+var loadHomePage = function(){
 
 
-// var loadHomePage = function(){
-//   var session;
-//   //check for session
-//   $.ajax({
-//     url: '/session',
-//     type: 'GET',
-//     dataType: 'JSON',
-//     cache: false
-//   })
-//   .done(function(response) {
-//     if(response.first_name !== null){
-//       console.log("Currently in Session");
-//       session = response;
-//       new Date().getTime(); //prevent caching
-//       $(".oauth-btn").toggle();
-//       $(".button-container").append("<h2>Welcome<br>"+response.first_name+"!</h2>");
-//       $(".event-form").removeClass("hidden");
-//       $(".logout-container").css("display","inline-block")
-//       $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
-//     }
-//     // $(".content-container").append('')
-//   })
-//   .fail(function() {
-//     console.log("error");
-//   })
+  L.mapbox.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
+
+  (function setLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(setPosition);
+    } else {
+      setMap(37.775710, -122.418172);
+    }
+  })();
+
+  function setPosition(position) {
+    userLatitude =  position.coords.latitude;
+    userLongitude = position.coords.longitude;
+    setMap(userLatitude, userLongitude);
+  }
+
+  function setMap(latitude, longitude){
+    //Persist background image for faster load times
+    $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
+  }
+  //add
+
+  $(document).on("submit", ".event-form", function(event){
+    event.preventDefault();
+    var userID = $("#user-id").text();
+    //could use serialize
+    var eventName = $(".event-form .name").val()
+    var depAddr = $(".event-form .dep-addr").val()
+    var arrAddr = $(".event-form .arr-addr").val()
+    var arrDate = $(".event-form .arr-date").val()
+    var date = $(".event-form .name").val()
+    var rideType=$(".event-form").serialize()
+    $.ajax({
+      url: '/users/'+userID+'/events',
+      type: 'POST',
+      dataType: 'JSON',
+      data: { event:{
+        name: eventName,
+        depart_address: depAddr ,
+        arrival_address: arrAddr,
+        arrival_datetime: arrDate,
+        ride_name: rideType.replace(/^(ride-type=)/,"")}
+      }
+    })
+    .done(function() {
+      console.log("success");
+    })
+    .fail(function() {
+      console.log("error");
+    })
+    .always(function() {
+      console.log("complete");
+    });
+
+
+  });
 
 
 
-//   L.mapbox.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
+  //delete
 
-//   (function setLocation() {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(setPosition);
-//     } else {
-//       setMap(37.775710, -122.418172);
-//     }
-//   })();
+  $(document).on("click", ".delete-btn", function(){
 
-//   function setPosition(position) {
-//     userLatitude =  position.coords.latitude;
-//     userLongitude = position.coords.longitude;
-//     setMap(userLatitude, userLongitude);
-//   }
-
-
-//   function setMap(latitude, longitude){
-//     //Persist background image for faster load times
-//     $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
-
-//     // var map = new mapboxgl.Map({
-//     //   container: 'map',
-//     //   style: 'https://www.mapbox.com/mapbox-gl-styles/styles/dark-v7.json',
-//     //   center: [latitude, longitude],
-//     //   zoom: 10,
-//     //   // causes pan & zoom handlers not to be applied, similar to
-//     //   // .dragging.disable() and other handler .disable() funtions in Leaflet.
-//     //   interactive: false
-//     // });
-
-//     // HANDLE RESIZING OF WINDOW
-//     // window.onresize = function(event){
-//     //   map.resize()
-//     // };
-//   }
+    if (result){
+      var userID = $(this).closest(".event-content").find("#user-id").text()
+      var eventID = $(this).closest(".event-content").find("#event-id").text()
+      debugger
+      $.ajax({
+        url: '/users/'+userID+'/events/'+eventID,
+        type: 'DELETE'
+      })
+      .done(function(response) {
+        $("p:contains("+response.deleted_event._id.$oid+")").closest(".event").remove();
+      })
+      .fail(function() {
+        console.log("error");
+      })
+    }
+  })
+}
 
 
-//   $(document).on('click', '.delete-btn',function(){
+$(document).ready(loadHomePage);
+$(document).on('page:change', loadHomePage);
 
-//     var eventID = $(this).parent().parent().find("#event-id").text();
-//     var userID= session.uuid;
-//     thisEvent= $(this);
-//     $.ajax({
-//       url: '/users/'+ userID + '/events/'+ eventID,
-//       type: 'DELETE',
+ // $(document).on('click', '.delete-btn',function(){
 
-//     })
-//     .done(function(response) {
-//       $(thisEvent).parent().parent().remove()
-//     })
-//     .fail(function() {
-//       console.log("error");
-//     })
+ //    var eventID = $(this).parent().parent().find("#event-id").text();
+ //    var userID= session.uuid;
+ //    thisEvent= $(this);
+ //    $.ajax({
+ //      url: '/users/'+ userID + '/events/'+ eventID,
+ //      type: 'DELETE',
 
-//   });
+ //    })
+ //    .done(function(response) {
+ //      $(thisEvent).parent().parent().remove()
+ //    })
+ //    .fail(function() {
+ //      console.log("error");
+ //    })
 
-// //Edit
-//   $(document).on('click', '.edit-btn', function(){
-//     $(this).closest(".event").find(".edit-form").removeClass("hidden").addClass('active-edit');
-//     $(this).closest(".event-content").toggle();
-
-//   });
-
-
-// }
-
-
-// $(document).ready(loadHomePage);
-// $(document).on('page:change', loadHomePage);
-
+ //  });

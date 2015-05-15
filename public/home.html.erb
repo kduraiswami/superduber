@@ -22,6 +22,7 @@
   </div>
   <div  ng-controller="HomeController" class="content-container">
 
+    <form class="event-form hidden" novalidate ng-controller="HomeController" action="#" ng-submit="submitForm(form)">
     <h2>Schedule a new event for Uber pickup:</h2>
     <form class="event-form hidden" novalidate ng-controller="HomeController" ng-submit="submitForm(form)">
       <label>Event Name:</label>

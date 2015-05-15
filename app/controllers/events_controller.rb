@@ -15,8 +15,10 @@ class EventsController < ApplicationController
   def create
     user = User.find_or_create_by(uuid: params[:user_id])
     new_event = user.events.create(event_params)
+
     p new_event.update_ride_id!
     redirect_to "/"
+
   end
 
   def update
@@ -27,7 +29,9 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    event = current_user.events.find_by(_id: params[:id])
+    byebug
+    user= User.where(uuid: current_user.id).first
+    event = user.events.find_by(_id: params[:id])
     event.delete
     render json:{deleted_event: event}
   end
