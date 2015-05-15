@@ -135,7 +135,8 @@ class Event
   end
 
   def update_ride_id!
-    response = HTTParty.get("https://api.uber.com/v1/products",
+    p "Updating ride ID"
+    p response = HTTParty.get("https://api.uber.com/v1/products",
       headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
       "scope" => "request",
       "Content-Type" => "application/json",
