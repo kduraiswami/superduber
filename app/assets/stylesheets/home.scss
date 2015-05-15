@@ -58,16 +58,19 @@ body{
   background-color: $superblue-hover;
 }
 
-.logout-btn{
+.logout-btn {
   border: none;
   border-radius: $border-rad;
   font-size: 1em;
   padding: 0.5em;
   background: $superblue;
   color: white;
-  width: 12em;
+  width: 3em;
   font-family: sans-serif;
   text-decoration: none;
+  display: inline-block;
+  float: right;
+  margin-top: 1em;
 }
 
 .logout-btn:hover{
@@ -103,11 +106,14 @@ body{
   width: 60px;
   border-radius: 50%;
   margin: auto;
+  float: left;
 
 }
 
 .prof-pic {
   display: inline-block;
+  /* border: 1px solid red; */
+  width: 10em;
 }
 
 .content-container{
