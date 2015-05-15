@@ -7,7 +7,7 @@ class HomeController < ApplicationController
         render "users/index", locals: {events: events, current_user: current_user}
         puts "CURRENT USER: #{current_user}"
       else #if they are logged in but don't have phone saved
-        redirect_to edit_user, locals: {current_user: current_user}
+        render edit_user_path(current_user.uuid), locals: {current_user: current_user}
       end
     else #user is not logged in so render logged out landing page
       #render logged out ERB page

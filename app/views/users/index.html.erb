@@ -60,7 +60,6 @@
     <h2>Your Upcoming Events:</h2>
     <div class="event-container">
       <% User.where(uuid:current_user.id).first.events.each do |event| %>
-      <%= current_user.id %>
       <div class="event">
         <div class="event-content">
           <p class="hidden" id="user-id"><%= current_user.id %></p>

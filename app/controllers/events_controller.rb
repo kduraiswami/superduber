@@ -29,7 +29,6 @@ class EventsController < ApplicationController
   end
 
   def destroy
-    byebug
     user= User.where(uuid: current_user.id).first
     event = user.events.find_by(_id: params[:id])
     event.delete
