@@ -2,6 +2,10 @@ function oauthRedir(){
   location.assign("oauth2");
 }
 
+function logoutRedir(){
+  location.assign("logout")
+}
+
 
 var loadHomePage = function(){
   var session;
@@ -20,10 +24,9 @@ var loadHomePage = function(){
       $(".oauth-btn").toggle();
       $(".button-container").append("<h2>Welcome<br>"+response.first_name+"!</h2>");
       $(".event-form").removeClass("hidden");
-
+      $(".logout-container").css("display","inline-block")
       $("nav").append('<div class="prof-pic"> <img src="'+response.picture+'"></div>')
     }
-
     // $(".content-container").append('')
   })
   .fail(function() {

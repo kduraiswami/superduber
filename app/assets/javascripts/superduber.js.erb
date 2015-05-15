@@ -17,7 +17,9 @@ superduber.config(function ($routeProvider, $locationProvider) {
   })
   .when('/oauth2', {
     redirectTo: '/oauth2'
-
+  })
+  .when('/logout', {
+    redirectTo: '/logout'
   })
   .otherwise({
     redirectTo: '/'

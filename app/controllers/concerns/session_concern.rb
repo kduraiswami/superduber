@@ -2,6 +2,8 @@ module SessionConcern
   extend ActiveSupport::Concern
 
   def current_user
-    User.find_by(uuid: session[:uuid]) if session[:uuid]
+  	if session[:uuid]
+    	User.find_by(uuid: session[:uuid]) 
+    end
   end
 end
