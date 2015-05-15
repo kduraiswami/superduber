@@ -16,12 +16,35 @@ class Event
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
 
   validates_presence_of :name, :depart_address, :arrival_address, :arrival_datetime
+  validate :check_valid_addresses
+  validate :check_distance_under_100_miles
 
   geocoded_by :geocode_user_addresses
   after_validation :geocode,
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
 
   belongs_to :user
+
+  def check_valid_addresses #does not prevent event from being saved
+    if Geocoder.search(depart_address).empty?
+      errors.add(:depart_address, "Not a valid departure address")
+      puts "departure address is wrong"
+    end
+    if Geocoder.search(arrival_address).empty?
+      errors.add(:arrival_address, "Not a valid destination address")
+      puts "arrival address is wrong"
+    end
+
+    return errors.full_messages
+  end
+
+  def check_distance_under_100_miles
+    #add validation; uber won't allow ride requests >100mi
+  end
+
+  def check_arrival_and_destination_not_same_address
+    #add validation; uber doesn't allow same address
+  end
 
   def geocode_user_addresses
     depart_coords_hash = Geocoder.search(depart_address)[0].data['geometry']['location']
