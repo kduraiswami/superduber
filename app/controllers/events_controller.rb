@@ -24,7 +24,7 @@ class EventsController < ApplicationController
       redirect_to "/?message=success#upcoming"
     else
       p @event
-      if @event.ride_id? == nil
+      if @event.ride_id == nil
         p @errors = ['Cannot find rides for departure address','Please make sure it is accurate']
         @event.destroy
       elsif @event.pickup_estimate == nil
