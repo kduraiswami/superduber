@@ -52,7 +52,7 @@ superduber.controller('HomeController', ['$scope','$location', '$http','events',
       depart_address: $(".event-form .dep-addr").val(),
       arrival_address: $(".event-form .arr-addr").val(),
       arrival_datetime: $(".event-form .arr-date").val(),
-      // ride_name: $(".event-form .ride-name").val()
+      ride_name: $(".event-form input[type='radio']:checked").val()
     };
 
     var request = {
@@ -80,6 +80,7 @@ superduber.controller('HomeController', ['$scope','$location', '$http','events',
       depart_address: $(".edit-form .dep-addr").val(),
       arrival_address: $(".edit-form .arr-addr").val(),
       arrival_datetime: $(".edit-form .arr-date").val(),
+      ride_name: $(".edit-form input[type='radio']:checked").val()
     };
 
 
