@@ -3,7 +3,6 @@ require 'twilio-ruby'
 class UsersController < ApplicationController
 
   def index
-
   end
 
   def show
@@ -42,8 +41,6 @@ class UsersController < ApplicationController
     puts "*************************"
     puts "Status update from Uber:"
 
-    # if params["event_type"] == "requests.status_changed"
-    # the other case is if it == "requests.receipt_ready"
     case params["meta"]["status"]
     when "processing"
       p "Request is processing"

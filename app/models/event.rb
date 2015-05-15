@@ -34,7 +34,7 @@ class Event
     self.arrival_coords[1] = arrival_coords_hash['lng']
   end
 
-  ################ SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER ####################
+  ###### SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER #######
 
   def time_as_str
     self.arrival_datetime.strftime("%l:%M%P")
@@ -104,8 +104,6 @@ class Event
       "Content-Type" => "application/json",
       },
       query: {
-        # latitude: self.depart_lat,
-        # longitude: self.depart_lon,
         latitude: self.depart_coords[0],
         longitude: self.depart_coords[1],
       }
@@ -139,9 +137,6 @@ class Event
 
     self.ride_request_id = response["request_id"]
     self.save!
-
-    # add a twilio sms response to user saying the ride has been requested, that we will update them when it's accepted, and that they can cancel at any time by replying 'Abort'
-    response #just for debugging
   end
 
   def change_ride_status(status) #For sandbox / testing only
@@ -185,8 +180,6 @@ class Event
       :from => '+19255237514',
       :to => self.user.phone,
       :body => message,
-      # :media_url => 'http://linode.rabasa.com/yoda.gif'
-      # status_callback: request.base_url + '/twilio/status'
       )
   end
 
@@ -205,10 +198,4 @@ class Event
     send_twilio_message(message)
   end
 
-
 end
-
-# twilio_upcoming_event_notification
-# twilio_ride_accepted_notification
-# twilio_driver_arriving_notification
-# twilio_driver_cancelled_notification
