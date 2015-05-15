@@ -8,7 +8,7 @@ class Oauth2Controller < ApplicationController
     if params[:error]
       render json: {message: params[:error]}, status: :unauthorized
     elsif params[:code]
-      response = HTTParty.post("https://login.uber.com/oauth/token",
+      p response = HTTParty.post("https://login.uber.com/oauth/token",
         query: {
           client_secret: ENV['UBER_SECRET'],
           client_id: ENV['UBER_CLIENT_ID'],
