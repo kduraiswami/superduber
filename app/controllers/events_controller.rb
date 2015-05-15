@@ -15,13 +15,16 @@ class EventsController < ApplicationController
   def create
     #this has to come from Angular controller
     user = User.find_or_create_by(uuid: params[:user_id])
-    user.events.create(event_params)
+    new_event = user.events.create(event_params)
+    puts "$$$$$$$ "
+    p new_event.update_ride_id!
     render json: user #nothing to render back
   end
 
   def update
     event = current_user.events.find_by(_id: params[:id])
     event.update_attributes(event_params)
+    event.update_ride_id!
     render json:{edited_event: event}
   end
 
@@ -40,7 +43,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.require(:event).permit(:name, :depart_address, :arrival_address, :arrival_datetime)
+    params.require(:event).permit(:name, :depart_address, :arrival_address, :arrival_datetime, :ride_name)
   end
 
 end

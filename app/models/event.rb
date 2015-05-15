@@ -112,10 +112,12 @@ class Event
     )
 
     response["products"].each do |product|
-      return self.ride_id = product["product_id"] if self.ride_name == product["display_name"]
+      if self.ride_name.downcase == product["display_name"].downcase
+        self.ride_id = product["product_id"]
+        self.save!
+        return self.ride_id
+      end
     end
-
-    nil
 
   end
 

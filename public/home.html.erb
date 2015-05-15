@@ -36,6 +36,24 @@
       <label>Date & Time (local):</label>
       <input class="arr-date" type="datetime-local" ng-model="form.arrival_datetime" required> </input>
 
+      <label>Ride Type:</label>
+      <label>
+        <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
+        UberX
+      </label>
+      <label>
+        <input class="ride-name" value="UberBLACK" type="radio" ng-model="form.ride_name" />
+        UberBLACK
+      </label>
+      <label>
+        <input class="ride-name" value="UberSUV" type="radio" ng-model="form.ride_name" />
+        UberSUV
+      </label>
+      <label>
+        <input class="ride-name" value="UberTAXI" type="radio" ng-model="form.ride_name" />
+        UberTAXI
+      </label>
+
       <input class="submit-btn" type="submit">
 
     </form>
@@ -74,6 +92,24 @@
           <label>Date</label>
           <input class="arr-date" value="{{ event.arrival_datetime | date: 'yyyy-MM-ddTHH:mm:ss'}}" type="datetime-local" required></input>
           <input class="submit-btn" type="submit">
+
+          <label>
+            <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
+            UberX
+          </label>
+          <label>
+            <input class="ride-name" value="UberBLACK" type="radio" ng-model="form.ride_name" />
+            UberBLACK
+          </label>
+          <label>
+            <input class="ride-name" value="UberSUV" type="radio" ng-model="form.ride_name" />
+            UberSUV
+          </label>
+          <label>
+            <input class="ride-name" value="UberTAXI" type="radio" ng-model="form.ride_name" />
+            UberTAXI
+          </label>
+
         </form>
 
       </div>
