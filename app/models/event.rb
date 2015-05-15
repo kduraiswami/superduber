@@ -229,7 +229,7 @@ class Event
     self.surge_confirmation_id = response['price']['surge_confirmation_id']
     surge_confirmation_href = response['price']['surge_confirmation_href']
 
-    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://#{ENV['NGROK_KEY']}.ngrok.com" : ENV['REDIRECT_URI']}/request_uber/?event_id=#{self.id.to_s}")
+    url = (surge_confirmation_href ? surge_confirmation_href : "#{Rails.env.development? ? "http://#{ENV['NGROK_KEY']}.ngrok.com"tw : ENV['REDIRECT_URI']}/request_uber/?event_id=#{self.id.to_s}")
 
     message = "Upcoming event '#{self.name}' at #{self.time_as_str}. #{self.ride_name} estimated cost: #{cost_range}; pickup time: #{self.pickup_estimate}min; ride duration: #{self.duration_estimate}min. Surge multiplier: #{surge_multiplier}. Click to confirm: #{url}"
 
