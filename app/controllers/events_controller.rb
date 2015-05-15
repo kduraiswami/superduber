@@ -23,14 +23,15 @@ class EventsController < ApplicationController
       @event.schedule_bg_job
       redirect_to "/?message=success#upcoming"
     else
+      p @event
       if @event.ride_id? == nil
-        @errors = ['Cannot find rides for departure address','Please make sure it is accurate']
+        p @errors = ['Cannot find rides for departure address','Please make sure it is accurate']
         @event.destroy
       elsif @event.pickup_estimate == nil
-        @errors = ['Distance cannot exceed 100 miles','You\'re crazy! Take a plane!']
+        p @errors = ['Distance cannot exceed 100 miles','You\'re crazy! Take a plane!']
         @event.destroy
       else
-        @errors = @event.errors.full_messages
+        p @errors = @event.errors.full_messages
       end
       render "users/index", locals: {current_user: user}
     end
