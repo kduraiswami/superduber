@@ -23,8 +23,6 @@ var loadHomePage = function(){
   }
 
 
-
-
   //delete
 
   $(document).on("click", ".delete-btn", function(){
