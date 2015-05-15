@@ -165,6 +165,8 @@ input.name, input.dep-addr, input.arr-addr, input.arr-date{
   text-align:center;
 }
 
+
+
 .submit-btn{
   margin-top: 1.7em;
   background-color: transparent;
@@ -208,4 +210,39 @@ input.name, input.dep-addr, input.arr-addr, input.arr-date{
 
 .event-content p {
   padding: .5em;
+}
+
+// Edit events
+
+.edit-container{
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  background-image: url("/images/concrete_seamless.png");
+}
+.edit-title{
+  text-align: center;
+  font-family: sans-serif;
+}
+.edit-form{
+  font-family: sans-serif;
+}
+.txt-inputs-container label {
+  display: block;
+  text-align: center;
+}
+
+.edit-radio-btns label {
+  display: block;
+}
+
+.edit-radio-btns {
+  width: 7em;
+  margin: 1em auto;
+}
+
+.edit-form input.submit-btn{
+  display: block;
+  margin: .5em auto;
 }
