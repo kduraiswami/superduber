@@ -30,7 +30,6 @@ class EventsController < ApplicationController
     event = user.events.find_by(id: params[:id])
     event.update_attributes(event_params)
     event.update_ride_id!
-    event.schedule_bg_job #Need to figure out how to delete the background job that was previously set up when the ride was last created / updated
     redirect_to "/"
   end
 
