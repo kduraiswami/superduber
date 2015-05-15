@@ -16,7 +16,7 @@ class Event
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
 
   validates_presence_of :name, :arrival_datetime
-  validate :arrival_address_found, :depart_address_found, :date_is_not_in_the_past
+  validate :arrival_address_found, :depart_address_found, :depart_arrival_address_not_same, :date_is_not_in_the_past
 
 
   geocoded_by :geocode_user_addresses
@@ -52,6 +52,12 @@ class Event
   def depart_address_found
     unless depart_coords[0] && depart_coords[1]
       errors.add(:depart_address, 'can\'t be located')
+    end
+  end
+
+  def depart_arrival_address_not_same
+    if arrival_coords == depart_coords
+      errors.add(:depart_address, 'can\'t be the same as the arrival address')
     end
   end
 
