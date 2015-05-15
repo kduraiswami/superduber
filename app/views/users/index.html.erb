@@ -15,7 +15,7 @@
     <h2>Schedule a new event for Uber pickup:</h2>
 
     <form action="/users/<%= current_user.uuid %>/events" method="post" class="event-form">
-      <p class="hidden" id="user-id"><%= current_user.id %></p>
+      <p class="hidden" id="user-id"><%= current_user.uuid %></p>
       <label>Event Name:</label>
       <input name="event[name]" class="name" type="text" required />
 
@@ -69,47 +69,14 @@
           <p class="dep-addr">Depart From: <%= event.depart_address %></p>
           <p class="arr-addr">Arrive At: <%= event.arrival_address %></p>
           <div class="ud-btns">
-            <div class="edit-btn">
+            <a href="/users/<%= current_user.uuid %>/events/<%=event.id%>/edit"><div class="edit-btn">
               <i class="fa fa-pencil"></i>Edit
-            </div>
+            </div></a>
             <div class="delete-btn">
               <i class="fa fa-trash-o"></i>Delete
             </div>
           </div>
         </div>
-
-        <form class="edit-form hidden">
-          <label>Name</label>
-          <input class= "name" type="text" value="{{event.name}}" required></input>
-
-          <label>Depart Address</label>
-          <input class="dep-addr" type="text" value="{{event.depart_address}}" required> </input>
-
-          <label>Arrive Address</label>
-          <input class="arr-addr" type="text" value="{{event.arrival_address}}" required> </input>
-
-          <label>Date</label>
-          <input class="arr-date" value="{{ event.arrival_datetime | date: 'yyyy-MM-ddTHH:mm:ss'}}" type="datetime-local" required></input>
-          <input class="submit-btn" type="submit">
-
-          <label>
-            <input class="ride-name" value="UberX" type="radio" ng-model="form.ride_name" />
-            UberX
-          </label>
-          <label>
-            <input class="ride-name" value="UberBLACK" type="radio" ng-model="form.ride_name" />
-            UberBLACK
-          </label>
-          <label>
-            <input class="ride-name" value="UberSUV" type="radio" ng-model="form.ride_name" />
-            UberSUV
-          </label>
-          <label>
-            <input class="ride-name" value="UberTAXI" type="radio" ng-model="form.ride_name" />
-            UberTAXI
-          </label>
-
-        </form>
 
       </div>
       <% end %>
