@@ -13,7 +13,7 @@ class Oauth2Controller < ApplicationController
           client_secret: ENV['UBER_SECRET'],
           client_id: ENV['UBER_CLIENT_ID'],
           grant_type: 'authorization_code',
-          redirect_uri: 'http://localhost:3000/oauth2/callback',
+          redirect_uri: "#{ENV['REDIRECT_URI'] || 'http://localhost:3000'}/oauth2/callback",
           code: params[:code] })
       access_token = response["access_token"]
       refresh_token = response["refresh_token"]
