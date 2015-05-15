@@ -2,6 +2,7 @@ class HomeController < ApplicationController
   def index
     if current_user
       events = current_user.upcoming_sorted_events
+      @event = Event.new
       render "users/index", locals: {events: events, current_user: current_user}
       puts "CURRENT USER: #{current_user}"
     else

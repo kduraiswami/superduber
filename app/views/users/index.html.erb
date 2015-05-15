@@ -13,34 +13,36 @@
   </div>
   <div class="content-container">
     <h2>Schedule a new event for Uber pickup:</h2>
-    <form class="event-form hidden" >
+
+
+    <form action="/users/<%= current_user.uuid %>/events" method="post" class="event-form">
       <label>Event Name:</label>
-      <input class= "name" type="text" required>
+      <input name="event[name]" class="name" type="text" required />
 
       <label>Depart Address:</label>
-      <input class="dep-addr" type="text" required>
+      <input name="event[depart_address]" class="dep-addr" type="text" required />
 
       <label>Arrive Address:</label>
-      <input class="arr-addr" type="text" required>
+      <input name="event[arrival_address]" class="arr-addr" type="text" required />
 
       <label>Date & Time (local):</label>
-      <input class="arr-date" type="datetime-local" required />
+      <input name="event[arrival_datetime]" class="arr-date" type="datetime-local" required />
 
       <label>Ride Type:</label>
       <label>
-        <input class="ride-name" value="UberX" type="radio" />
+        <input name="event[ride_name]" class="ride-name" value="UberX" type="radio" />
         UberX
       </label>
       <label>
-        <input class="ride-name" value="UberBLACK" type="radio" />
+        <input name="event[ride_name]" class="ride-name" value="UberBLACK" type="radio" />
         UberBLACK
       </label>
       <label>
-        <input class="ride-name" value="UberSUV" type="radio"  />
+        <input name="event[ride_name]" class="ride-name" value="UberSUV" type="radio"  />
         UberSUV
       </label>
       <label>
-        <input class="ride-name" value="UberTAXI" type="radio" />
+        <input name="event[ride_name]" class="ride-name" value="UberTAXI" type="radio" />
         UberTAXI
       </label>
 
