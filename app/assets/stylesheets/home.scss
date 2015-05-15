@@ -153,6 +153,22 @@ body{
   border-radius: $border-rad;
 }
 
+.error{
+  color: #B00000;
+  background-color: #FFE2E2;
+}
+
+.error ul{
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.success{
+  color: #00B015; 
+  background-color: #E2FFE5;
+  margin-bottom: 1em;
+}
+
 .event-form {
   border: 1px solid lightgray;
   width: 20em;

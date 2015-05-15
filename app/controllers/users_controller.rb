@@ -21,7 +21,6 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @current_user = current_user
   end
 
   def reset_session

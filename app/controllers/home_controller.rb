@@ -4,10 +4,11 @@ class HomeController < ApplicationController
       if current_user.phone #if they already have phone saved in DB
         events = current_user.upcoming_sorted_events
         @event = Event.new
-        render "users/index", locals: {events: events, current_user: current_user}
+        @success = 'Event successfully scheduled' if params[:message] == 'success'
+        render "users/index", locals: {events: events}
         puts "CURRENT USER: #{current_user}"
       else #if they are logged in but don't have phone saved
-        render edit_user_path(current_user.uuid), locals: {current_user: current_user}
+        render "users/edit"
       end
     else #user is not logged in so render logged out landing page
       #render logged out ERB page
