@@ -69,7 +69,7 @@ class UsersController < ApplicationController
     render json: { message: message }
   end
 
-  def cancel_ride # Webhook triggered by user SMS to Twilio
+  def cancel_ride_via_sms # Webhook triggered by user SMS to Twilio
     user_response = params[:Body]
     user = User.find_by(phone: params[:From])
     event = user.next_event
@@ -82,6 +82,12 @@ class UsersController < ApplicationController
     end
 
     render json: { message: "success" }
+  end
+
+  def cancel_ride_via_web
+    event = Event.find(params[:event_id])
+    p event.cancel_ride
+    redirect_to '/'
   end
 
 

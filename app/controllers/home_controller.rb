@@ -24,7 +24,7 @@ class HomeController < ApplicationController
     response = event.request_ride
 
 
-    render json: response # Placeholder action; likely need to redirect to new view page that shows the ride has been requested, has a button to cancel, etc.  Ideally this page would then refresh automatically as soon as the ride has been accepted by uber, and show the ride info.  Should this all be on '/' route?
+    render "home/request_uber", locals: {event: event} # Placeholder action; likely need to redirect to new view page that shows the ride has been requested, has a button to cancel, etc.  Ideally this page would then refresh automatically as soon as the ride has been accepted by uber, and show the ride info.  Should this all be on '/' route?
 
   end
 end
