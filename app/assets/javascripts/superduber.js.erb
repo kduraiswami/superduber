@@ -69,6 +69,9 @@ superduber.controller('HomeController', ['$scope','$location', '$http','events',
 
     $http(request)
     .success(function(response){
+
+      $(".event-container").prepend("<div class='event'><div class='event-content'><p class='hidden' id='event-id'>"+response.event._id.$oid+"</p><p class='event-name'>Name: "+response.event.name+"</p><p class='arr-date'>Date: "+moment(response.event.arrival_datetime).format('MMMM D, YYYY @ h:mmA')+"</p><p class='dep-addr'>Depart From: "+response.event.depart_address+"</p><p class='arr-addr'>Arrive At: "+response.event.arrival_address+"</p><div class='ud-btns'><div class='edit-btn'><i class='fa fa-pencil'></i>Edit</div><div class='delete-btn'><i class='fa fa-trash-o'></i>Delete</div></div></div><form class='edit-form hidden' novalidate ng-submit='editForm(form)'><p class='hidden' id='edit-event-id'>"+response.event._id.$oid+"</p><label>Name</label><input class= 'name' type='text' value= "+response.event.name+"></input><label>Depart Address</label><input class='dep-addr' type='text' value= "+response.event.depart_address+"> </input><label>Arrive Address</label><input class='arr-addr' type='text' value="+response.event.arrival_address+"> </input><label>Date</label><input class='arr-date' value='{{ event.arrival_datetime | date: 'yyyy-MM-ddTHH:mm:ss'}}' type='datetime-local' ></input><input class='submit-btn' type='submit'></form></div>")
+
     })
     .error(function(response){
     });

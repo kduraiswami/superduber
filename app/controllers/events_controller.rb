@@ -15,8 +15,8 @@ class EventsController < ApplicationController
   def create
     #this has to come from Angular controller
     user = User.find_or_create_by(uuid: params[:user_id])
-    user.events.create(event_params)
-    render json: user #nothing to render back
+    event = user.events.create(event_params)
+    render json:{event: event}
   end
 
   def update
