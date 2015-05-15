@@ -1,6 +1,6 @@
 <h3>Thanks for signing up!  You're almost done - one last step.  Please provide your phone number so we can text you when it's time to request a ride</h3>
 
-<form action="/users/<%= @current_user.uuid %>" method="post" class="phone-form">
+<form action="/users/<%= current_user.uuid %>" method="post" class="phone-form">
   <input type="hidden" name="_method" value="put"/>
   <label>Phone Number (must be exactly 10 digits, no dashes or dots):</label>
   <input name="phone" class="phone" type="tel" pattern="^\d{10}$" required />
