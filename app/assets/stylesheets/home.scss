@@ -42,6 +42,17 @@ body{
   transform: translate(-50%, -50%);
 }
 
+.greeting-container{
+  position: absolute;
+  height: auto;
+  /* width: 9.3em; */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-family: sans-serif;
+}
+
 .oauth-btn{
   border: none;
   border-radius: $border-rad;

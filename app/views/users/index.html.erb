@@ -7,8 +7,11 @@
         <a href="/logout" class="logout-btn">Logout</a>
         <img src=<%= current_user.picture %>>
       </div>
-    </nav>
 
+    </nav>
+    <div class="greeting-container">
+      <h1> Welcome, <%= current_user.first_name %>!</h1>
+    </div>
   </div>
   <div class="content-container">
     <h2>Schedule a new event for Uber pickup:</h2>
