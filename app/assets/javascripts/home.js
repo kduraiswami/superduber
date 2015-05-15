@@ -1,26 +1,26 @@
 var loadHomePage = function(){
 
 
-  L.mapbox.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
+  // L.mapbox.accessToken = 'pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q';
 
-  (function setLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(setPosition);
-    } else {
-      setMap(37.775710, -122.418172);
-    }
-  })();
+  // (function setLocation() {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(setPosition);
+  //   } else {
+  //     setMap(37.775710, -122.418172);
+  //   }
+  // })();
 
-  function setPosition(position) {
-    userLatitude =  position.coords.latitude;
-    userLongitude = position.coords.longitude;
-    setMap(userLatitude, userLongitude);
-  }
+  // function setPosition(position) {
+  //   userLatitude =  position.coords.latitude;
+  //   userLongitude = position.coords.longitude;
+  //   setMap(userLatitude, userLongitude);
+  // }
 
-  function setMap(latitude, longitude){
-    //Persist background image for faster load times
-    $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
-  }
+  // function setMap(latitude, longitude){
+  //   //Persist background image for faster load times
+  //   $("head").append('<style>#map{background-image: url("http://api.tiles.mapbox.com/v4/ceballos392.7f2001a9/'+longitude+','+latitude+',13/1280x800.png?access_token=pk.eyJ1IjoiY2ViYWxsb3MzOTIiLCJhIjoiSFBRbkZ4ZyJ9.s1aM5qDZ1IRBccNCgwPE1Q"); background-repeat: no-repeat; background-size: auto;}</style>');
+  // }
 
 
   //add
