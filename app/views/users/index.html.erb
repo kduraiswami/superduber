@@ -16,11 +16,11 @@
   <div class="content-container">
     <h2>Schedule a new event for Uber pickup:</h2>
 
-    <% if @event.errors %>
+    <% if @errors %>
       <div class="event error">
         <ul>
-        <% @event.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+        <% @errors.each do |error| %>
+          <li><%= error %></li>
         <% end %>
         </ul>
       </div>
