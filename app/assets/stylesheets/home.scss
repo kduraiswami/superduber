@@ -142,13 +142,16 @@ body{
   padding-top: 1em;
 }
 
+input.name, input.dep-addr, input.arr-addr, input.arr-date{
+  height: 2em;
+}
+
 .name, .dep-addr, .arr-addr, .arr-date {
   display: block;
   /* margin-bottom: 1em; */
   margin: .5em auto;
   border: 1px solid lightgray;
   border-radius: 4px;
-  height: 2em;
   font-size: .8em;
   width: 22em;
 }
@@ -201,4 +204,8 @@ body{
   border:1px solid lightgray;
   margin-bottom: 1em;
   background-color: transparent;
+}
+
+.event-content p {
+  padding: .5em;
 }
