@@ -13,12 +13,11 @@ class EventsController < ApplicationController
   end
 
   def create
-    user = User.find_or_create_by(uuid: params[:user_id])
+    user = User.find_by(uuid: params[:user_id])
     new_event = user.events.create(event_params)
 
     p new_event.update_ride_id!
     redirect_to "/"
-
   end
 
   def update
