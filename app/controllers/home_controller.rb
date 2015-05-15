@@ -1,6 +1,12 @@
 class HomeController < ApplicationController
   def index
-    render "layouts/application"
+    if current_user
+      events = current_user.upcoming_sorted_events
+      render "users/index", locals: {events: events, current_user: current_user}
+      puts "CURRENT USER: #{current_user}"
+    else
+      #render logged out ERB page
+    end
   end
 
   def request_uber # Triggered when user clicks link to accept ride (or if surging, after they accept surge pricing, Uber redirects here)

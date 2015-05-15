@@ -38,10 +38,6 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    angular-rails-templates (0.2.0)
-      railties (>= 3.1)
-      sprockets (~> 2)
-      tilt
     arel (6.0.0)
     awesome_print (1.6.1)
     better_errors (2.1.1)
@@ -212,7 +208,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers
-  angular-rails-templates
   awesome_print
   better_errors
   bower-rails
