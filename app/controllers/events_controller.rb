@@ -2,11 +2,9 @@ class EventsController < ApplicationController
 
   def index
     if current_user.nil?
-      #render something that tells Angular to show the "Login via Uber" page
       redirect_to "/"
     else
       render json: {user: current_user, events: current_user.upcoming_sorted_events}
-      # render json: current_user.events
     end
     puts "CURRENT USER: **************************"
     p current_user
