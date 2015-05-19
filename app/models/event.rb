@@ -5,7 +5,8 @@ class Event
   field :name, type: String
   field :depart_address, type: String
   field :arrival_address, type: String
-  field :arrival_datetime, type: Time #UTC OR LOCAL TIME?
+  field :arrival_datetime, type: Time #UTC; Mongo can't store local time
+  field :timezone_offset, type: Integer #In seconds, offset from UTC
   field :ride_id, type: String # Product code
   field :ride_name, type: String #e.g. UberX
   field :ride_request_id, type: String #ID for the request
@@ -24,6 +25,16 @@ class Event
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
 
   belongs_to :user
+
+  def convert_time_to_local
+    input_time = self.arrival_datetime
+    timezone = Timezone::Zone.new(latlon: self.depart_coords)
+    puts "Local timezone of event: #{timezone.zone}"
+
+    local_time = timezone.time_with_offset(input_time)
+    puts "Local time as converted: #{local_time}"
+    self.arrival_datetime = local_time
+  end
 
   def geocode_user_addresses
     depart_search_results = Geocoder.search(depart_address)[0]

@@ -29,3 +29,8 @@ module Superduber
     # config.i18n.default_locale = :de
   end
 end
+
+## Added for 'timezone' gem
+Timezone::Configure.begin do |c|
+  c.username = 'berkjon'
+end
