@@ -64,6 +64,7 @@ class Event
   def date_is_not_in_the_past
     if arrival_datetime.present? && arrival_datetime < Date.today
       errors.add(:arrival_datetime, "can't be in the past")
+      puts "Event is in the past"
     end
   end
 
