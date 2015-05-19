@@ -27,5 +27,12 @@ module Superduber
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+
   end
+end
+
+## Added for 'timezone' gem
+Timezone::Configure.begin do |c|
+  c.username = 'berkjon'
 end

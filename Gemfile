@@ -41,6 +41,7 @@ gem 'resque-scheduler'
 gem 'responders', '~> 2.0'
 gem 'active_model_serializers'
 gem 'geocoder'
+gem 'timezone'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
