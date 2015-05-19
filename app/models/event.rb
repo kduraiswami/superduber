@@ -147,6 +147,7 @@ class Event
       }
     )
 
+    puts "Response from update_ride_id! method: #{response}"
     response["products"].each do |product|
       if self.ride_name.downcase == product["display_name"].downcase
         self.ride_id = product["product_id"]

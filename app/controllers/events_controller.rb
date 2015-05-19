@@ -17,6 +17,7 @@ class EventsController < ApplicationController
 
   def create
     user = User.find_by(uuid: params[:user_id])
+    puts "New event params: #{event_params}"
     @event = user.events.new(event_params)
 
     if @event.save && @event.update_ride_id! && @event.update_estimate!
