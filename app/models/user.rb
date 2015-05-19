@@ -13,7 +13,7 @@ class User
   has_many :events
 
   def upcoming_sorted_events #This is what's shown to the user
-    self.events.select {|e| e.arrival_datetime > Time.now}.sort_by{|e| e.arrival_datetime}
+    self.events.select {|e| e.arrival_datetime.future?}.sort_by{|e| e.arrival_datetime}
   end
 
   def next_event #Used in Twilio webhook to return the upcoming event
