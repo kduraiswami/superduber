@@ -17,7 +17,10 @@ class EventsController < ApplicationController
 
   def create
     user = User.find_by(uuid: params[:user_id])
+    puts "New event params: #{event_params}"
     @event = user.events.new(event_params)
+    @event.geocode_user_addresses #Need to get location first in order to get local time zone
+    @event.adjust_for_local_time # Fixes time here, before validation checks
 
     if @event.save && @event.update_ride_id! && @event.update_estimate!
       @event.schedule_bg_job
@@ -41,6 +44,7 @@ class EventsController < ApplicationController
     user = User.find_or_create_by(uuid: params[:user_id])
     event = user.events.find_by(id: params[:id])
     event.update_attributes(event_params)
+    event.adjust_for_local_time
     event.update_ride_id!
     redirect_to "/"
   end

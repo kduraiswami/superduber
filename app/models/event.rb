@@ -5,7 +5,8 @@ class Event
   field :name, type: String
   field :depart_address, type: String
   field :arrival_address, type: String
-  field :arrival_datetime, type: Time #UTC OR LOCAL TIME?
+  field :arrival_datetime, type: Time #UTC; Mongo can't store timezone information
+  field :timezone_offset, type: Integer #In seconds, offset from UTC
   field :ride_id, type: String # Product code
   field :ride_name, type: String #e.g. UberX
   field :ride_request_id, type: String #ID for the request
@@ -24,6 +25,7 @@ class Event
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
 
   belongs_to :user
+
 
   def geocode_user_addresses
     depart_search_results = Geocoder.search(depart_address)[0]
@@ -62,9 +64,27 @@ class Event
   end
 
   def date_is_not_in_the_past
-    if arrival_datetime.present? && arrival_datetime < Date.today
+    if arrival_datetime.present? && arrival_datetime.past? #Date exists but is in the past
       errors.add(:arrival_datetime, "can't be in the past")
+      puts "Event is in the past"
     end
+  end
+
+  ######## TIME ZONE ADJUSTMENTS ########
+  def adjust_for_local_time
+    input_time = self.arrival_datetime #What the user entered; Mongo defaults to save as UTC
+    timezone = Timezone::Zone.new(latlon: self.depart_coords)
+    puts "Local timezone of event: #{timezone.zone}"
+
+    offset = timezone.utc_offset
+    self.timezone_offset = offset
+
+    self.arrival_datetime = input_time - offset #Fixes time in DB to reflect actual UTC time of the event
+    puts "Correct time of event in UTC: #{self.arrival_datetime}"
+  end
+
+  def arrival_datetime_local #Returns datetime in local timezone; same as what user entered
+    self.arrival_datetime.localtime(self.timezone_offset)
   end
 
   ###### SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER #######
@@ -147,6 +167,7 @@ class Event
       }
     )
 
+    puts "Response from update_ride_id! method: #{response}"
     response["products"].each do |product|
       if self.ride_name.downcase == product["display_name"].downcase
         self.ride_id = product["product_id"]

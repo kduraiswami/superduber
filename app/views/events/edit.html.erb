@@ -15,7 +15,7 @@
       <input class="arr-addr" name="event[arrival_address]" type="text" value="<%= @event.arrival_address %>" required> </input>
 
       <label>Date</label>
-      <input class="arr-date" name="event[arrival_datetime]" value="<%= @event.arrival_datetime.strftime('%Y-%m-%dT%H:%M:%S') %>" type="datetime-local" required></input>
+      <input class="arr-date" name="event[arrival_datetime]" value="<%= @event.arrival_datetime_local.strftime('%Y-%m-%dT%H:%M:%S') %>" type="datetime-local" required></input>
     </div>
     <div class="edit-radio-btns">
       <label>
