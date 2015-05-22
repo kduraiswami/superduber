@@ -156,6 +156,8 @@ class Event
 
   def update_ride_id!
     p "Updating ride ID"
+    p "SELF.USER.UBER_ACCESS_TOKEN: #{self.user.uber_access_token}"
+    p "DEPART COORDS: #{self.depart_coords}"
     p response = HTTParty.get("https://api.uber.com/v1/products",
       headers: {"Authorization" => "Bearer #{self.user.uber_access_token}",
       "scope" => "request",
