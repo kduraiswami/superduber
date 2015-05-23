@@ -15,17 +15,17 @@ class Event
   field :pickup_estimate, type: Integer
   field :arrival_coords, type: Array, default: [] #format: [lat, lng]
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
-
-  validates_presence_of :name, :arrival_datetime
-  validate :arrival_address_found, :depart_address_found, :depart_arrival_address_not_same, :date_is_not_in_the_past
-
+  belongs_to :user
 
   geocoded_by :geocode_user_addresses
   before_validation :geocode,
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
+  before_validation :update_estimate!, :update_ride_id!
 
-  belongs_to :user
+  validates_presence_of :name, :arrival_datetime
+  validate :arrival_address_found, :depart_address_found, :depart_arrival_address_not_same, :date_is_not_in_the_past, :ride_id_not_found, :pickup_estimate_not_found
 
+  before_save :adjust_for_local_time
 
   def geocode_user_addresses
     depart_search_results = Geocoder.search(depart_address)[0]
@@ -70,6 +70,18 @@ class Event
     end
   end
 
+  def ride_id_not_found
+    unless ride_id
+      errors.add(:ride_name, "can't be found for that departure address; please confirm you entered it correctly, and that this type of ride is available in this city.")
+    end
+  end
+
+  def pickup_estimate_not_found
+    unless pickup_estimate
+      errors.add(:pickup_estimate, "unavailable. Check that the distance do not exceed 100 miles.")
+    end
+  end
+
   ######## TIME ZONE ADJUSTMENTS ########
   def adjust_for_local_time
     input_time = self.arrival_datetime #What the user entered; Mongo defaults to save as UTC
@@ -78,7 +90,6 @@ class Event
 
     offset = timezone.utc_offset
     self.timezone_offset = offset
-
     self.arrival_datetime = input_time - offset #Fixes time in DB to reflect actual UTC time of the event
     puts "Correct time of event in UTC: #{self.arrival_datetime}"
   end
@@ -144,6 +155,12 @@ class Event
     puts "Time of next background job: #{time_of_next_bg_job}"
     puts "Current time: #{Time.current}"
     puts "************************************"
+  end
+
+  def clear_bg_jobs
+    puts "Clearing delayed Resque jobs:"
+    p Resque.remove_delayed(NotifyUserWorker, self) +
+      Resque.remove_delayed(RequestEstimateWorker, self)
   end
 
   def time_of_next_bg_job
