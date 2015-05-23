@@ -101,7 +101,7 @@ class Event
   ###### SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER #######
 
   def time_as_str
-    self.arrival_datetime.strftime("%l:%M%P")
+    self.arrival_datetime_local.strftime("%l:%M%P")
   end
 
   def estimated_duration
