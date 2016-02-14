@@ -15,16 +15,17 @@ class Event
   field :pickup_estimate, type: Integer
   field :arrival_coords, type: Array, default: [] #format: [lat, lng]
   field :depart_coords, type: Array, default: [] #format: [lat, lng]
-
-  validates_presence_of :name, :arrival_datetime
-  validate :arrival_address_found, :depart_address_found, :depart_arrival_address_not_same, :date_is_not_in_the_past
-
+  belongs_to :user
 
   geocoded_by :geocode_user_addresses
   before_validation :geocode,
     :if => lambda{ |obj| obj.depart_address_changed? || obj.arrival_address_changed? }
+  before_validation :update_ride_id, :update_estimate
+  before_validation :adjust_for_local_time, #must happen after geocoding; is there a better way to ensure the order?
+      :if => lambda{ |obj| obj.arrival_datetime_changed? }
 
-  belongs_to :user
+  validates_presence_of :name, :arrival_datetime
+  validate :arrival_address_found, :depart_address_found, :depart_arrival_address_not_same, :date_is_not_in_the_past, :ride_id_not_found, :pickup_estimate_not_found
 
 
   def geocode_user_addresses
@@ -70,15 +71,27 @@ class Event
     end
   end
 
+  def ride_id_not_found #depends on successful "update_ride_id!""
+    unless ride_id
+      errors.add(:ride_name, "can't be found for that departure address; please confirm you entered it correctly, and that this type of ride is available in this city.")
+    end
+  end
+
+  def pickup_estimate_not_found #depends on successful "update_estimate!"
+    unless pickup_estimate
+      errors.add(:pickup_estimate, "unavailable. Check that the distance do not exceed 100 miles.")
+    end
+  end
+
   ######## TIME ZONE ADJUSTMENTS ########
   def adjust_for_local_time
-    input_time = self.arrival_datetime #What the user entered; Mongo defaults to save as UTC
+    puts "Input time from user:"
+    p input_time = self.arrival_datetime #What the user entered; Mongo defaults to save as UTC
     timezone = Timezone::Zone.new(latlon: self.depart_coords)
     puts "Local timezone of event: #{timezone.zone}"
 
     offset = timezone.utc_offset
     self.timezone_offset = offset
-
     self.arrival_datetime = input_time - offset #Fixes time in DB to reflect actual UTC time of the event
     puts "Correct time of event in UTC: #{self.arrival_datetime}"
   end
@@ -90,14 +103,14 @@ class Event
   ###### SCHEDULING BG JOBS AND CHECKING WHEN TO NOTIFY USER #######
 
   def time_as_str
-    self.arrival_datetime.strftime("%l:%M%P")
+    self.arrival_datetime_local.strftime("%l:%M%P")
   end
 
   def estimated_duration
     (self.duration_estimate + self.pickup_estimate).minutes
   end
 
-  def update_estimate!
+  def update_estimate
     puts "RIDE ESTIMATE RESPONSE:"
     p response = request_estimate_response(self)
 
@@ -106,12 +119,16 @@ class Event
     else
       self.pickup_estimate = response['pickup_estimate']
       self.duration_estimate = (response['trip']['duration_estimate']/60.0).ceil
-      self.save!
 
       puts "ESTIMATED DURATION: #{estimated_duration} (minutes)"
-
       response
     end
+  end
+
+  def update_estimate!
+    response = update_estimate
+    self.save!
+    response
   end
 
   def notification_buffer
@@ -119,7 +136,7 @@ class Event
   end
 
   def time_to_notify_user
-    self.arrival_datetime - estimated_duration - notification_buffer
+    self.arrival_datetime_local - estimated_duration - notification_buffer
   end
 
   def schedule_bg_job
@@ -146,6 +163,12 @@ class Event
     puts "************************************"
   end
 
+  def clear_bg_jobs
+    puts "Clearing delayed Resque jobs:"
+    p Resque.remove_delayed(NotifyUserWorker, self) +
+      Resque.remove_delayed(RequestEstimateWorker, self)
+  end
+
   def time_of_next_bg_job
     if time_to_notify_user - Time.now > 180.minutes #more than 3 hours before need to notify
       return time_to_notify_user - 180.minutes
@@ -154,7 +177,7 @@ class Event
     end
   end
 
-  def update_ride_id!
+  def update_ride_id
     p "Updating ride ID"
     p "SELF.USER.UBER_ACCESS_TOKEN: #{self.user.uber_access_token}"
     p response = HTTParty.get("https://api.uber.com/v1/products",
@@ -168,11 +191,10 @@ class Event
       }
     )
 
-    puts "Response from update_ride_id! method: #{response}"
+    puts "Response from update_ride_id method: #{response}"
     response["products"].each do |product|
       if self.ride_name.downcase == product["display_name"].downcase
         self.ride_id = product["product_id"]
-        self.save!
         return self.ride_id
       end
     end

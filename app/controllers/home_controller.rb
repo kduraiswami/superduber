@@ -4,7 +4,12 @@ class HomeController < ApplicationController
       if current_user.phone #if they already have phone saved in DB
         events = current_user.upcoming_sorted_events
         @event = Event.new
-        @success = 'Event successfully scheduled' if params[:message] == 'success'
+        if params[:message] == 'create_success'
+          @success = 'Event successfully scheduled'
+        elsif params[:message] == 'update_success'
+          @success = 'Event successfully updated'
+        end
+
         render "users/index", locals: {events: events}
         puts "CURRENT USER: #{current_user}"
       else #if they are logged in but don't have phone saved
